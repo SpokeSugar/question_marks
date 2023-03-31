@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:question_marks/mixin/localization_mixin.dart';
 import 'package:question_marks/model/question/question.dart';
@@ -39,6 +41,12 @@ class QuestionPage extends StatelessWidget {
                 const SizedBox(
                   height: 8,
                 ),
+                if (question.imagePath != null)
+                  Image.file(File(question.imagePath!)),
+                if (question.imagePath != null)
+                  const SizedBox(
+                    height: 8,
+                  ),
                 (question.toCollectSet().length == 1)
                     ? AnswerButtonBar(
                         answers: question.toShuffleList(),

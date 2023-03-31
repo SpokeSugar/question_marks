@@ -28,6 +28,7 @@ class AnswerPageRoute extends GoRouteData {
 
           if (question != null) {
             return AnswerPage(
+              questionText: question.q,
               collectSet: question.toCollectSet(),
               canBack:
                   !setEquals(question.toCollectIDSet(), answer.collectAnswer),

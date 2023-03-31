@@ -83,8 +83,8 @@ class QuestionManager extends _$QuestionManager {
 
   QuestionModel? get random {
     if ((state.value?.isNotEmpty ?? false)) {
-      final value = math.Random().nextInt((state.value?.length ?? 0));
-      return state.value?[value - 1];
+      final value = math.Random().nextInt((state.value?.length ?? 0) - 1);
+      return state.value?[value];
     }
     return null;
   }
@@ -97,8 +97,22 @@ class QuestionManager extends _$QuestionManager {
     if (file.existsSync()) {
       final fileString = await file.readAsString();
       final List<dynamic> jsonData = jsonDecode(fileString);
-      List<QuestionModel> questionList =
-          jsonData.map((e) => QuestionModel.fromJson(e)).toList();
+      List<QuestionModel> questionList = jsonData.map((e) {
+        final item = QuestionModel.fromJson(e);
+        if (item.imagePath != null && item.imagePath != "") {
+          final imageFolder = File(p.join(
+              appDoc.absolute.path,
+              QuestionModel.questionPath,
+              id,
+              FileLoadingSession.quizJsonFilePath,
+              FileLoadingSession.imageFolderPath,
+              item.imagePath));
+          if (imageFolder.existsSync()) {
+            return item.copyWith(imagePath: imageFolder.path);
+          }
+        }
+        return item.copyWith(imagePath: null);
+      }).toList();
       return questionList;
     }
     return UnmodifiableListView(damyData);

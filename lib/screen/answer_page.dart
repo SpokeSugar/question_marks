@@ -15,12 +15,14 @@ class AnswerPage extends ConsumerWidget {
     required this.select,
     required this.collectSet,
     super.key,
+    this.questionText,
     this.textColor,
     this.onNextTap,
     this.onAgainTap,
     this.canBack = false,
   });
 
+  final String? questionText;
   final Set<AnswerModel> select;
   final Set<AnswerModel> collectSet;
   final VoidCallback? onNextTap;
@@ -62,6 +64,8 @@ class AnswerPage extends ConsumerWidget {
             sliver: SliverList(
               delegate: SliverChildListDelegate(
                 [
+                  if (questionText != null)
+                    Text(questionText ?? "No Question Text"),
                   const Divider(),
                   if (ref.watch(settingsNotifierProvider).showResult)
                     ResultCard(
