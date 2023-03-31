@@ -7,6 +7,8 @@ import 'package:file_selector/file_selector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:question_marks/model/file_request/file_request.dart';
+import 'package:question_marks/model/move_photo_file_req/move_photo_file_req.dart';
 import 'package:question_marks/model/question_column/question_column.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -25,10 +27,8 @@ class FileLoadingSession extends _$FileLoadingSession {
   static const XTypeGroup json =
       XTypeGroup(label: "json", extensions: ["json"]);
 
-  final List<String> _questionId = [];
-
   static const imageFolderPath = 'image';
-  static const idFilePath = "'id.json'";
+  static const idFilePath = "id.json";
   static const quizJsonFilePath = "quiz.json";
 
   @override
@@ -73,7 +73,8 @@ class FileLoadingSession extends _$FileLoadingSession {
         }
 
         if (ext == '.csv') {
-          state = state.copyWith(questions: await convertCSVFile(file));
+          state =
+              state.copyWith(questions: await compute(convertCSVFile, file));
         } else if (ext == '.json') {
           state = state.copyWith(questions: await convertJson(file));
         }
@@ -138,6 +139,8 @@ class FileLoadingSession extends _$FileLoadingSession {
     }
   }
 
+  static Future<void> moveTempFile() async {}
+
   Future<List<QuestionModel>> convertJson(XFile file) async {
     final fileString = await file.readAsString();
     final List<dynamic> jsonData = jsonDecode(fileString);
@@ -146,7 +149,9 @@ class FileLoadingSession extends _$FileLoadingSession {
     return questionList;
   }
 
-  Future<List<QuestionModel>> convertCSVFile(XFile file) async {
+  static Future<List<QuestionModel>> convertCSVFile(XFile file) async {
+    final List<String> questionId = [];
+
     final csv = await file.readAsString();
     final field = const CsvToListConverter().convert(csv);
     final questions = <QuestionModel>[];
@@ -176,8 +181,8 @@ class FileLoadingSession extends _$FileLoadingSession {
           isCorrect: answerSplit.contains(answerId.length),
         ));
       }
-      final id = getUniqueID(_questionId);
-      _questionId.add(id);
+      final id = getUniqueID(questionId);
+      questionId.add(id);
       questions.add(QuestionModel(
         q: question,
         list: answers,
@@ -188,54 +193,83 @@ class FileLoadingSession extends _$FileLoadingSession {
     return questions;
   }
 
-  Future<void> movePhotoFile(String id) async {
-    final documentsDirectory = await getApplicationDocumentsDirectory();
+  static Future<void> _movePhotoFile(MovePhotoReq req) async {
+    await Directory(p.join(req.document.absolute.path,
+            QuestionModel.questionPath, req.id, imageFolderPath))
+        .create(recursive: true);
 
-    final tempDirectory = await getTemporaryDirectory();
-
-    for (final i in state.questions!) {
+    for (final i in req.list) {
       if (i.imagePath != null) {
         final imagePath = p.joinAll([...?i.imagePath?.split(RegExp(r'[/\\]'))]);
 
-        await File(p.join(p.join(tempDirectory.absolute.path, imageFolderPath),
-                imagePath))
-            .copy(p.join(documentsDirectory.absolute.path,
-                QuestionModel.questionPath, id, imageFolderPath, imagePath));
+        await File(p.join(
+                p.join(req.temp.absolute.path, imageFolderPath), imagePath))
+            .copy(p.join(req.document.absolute.path, QuestionModel.questionPath,
+                req.id, imageFolderPath, imagePath));
       }
     }
   }
 
-  Future<void> saveFile(String title) async {
+  static Future<void> replaceFile(FileReq req) async {
+    final file = File(req.path);
+    if (await file.exists()) {
+      await file.delete();
+    }
+
+    final quizDataFile = await file.create(exclusive: false, recursive: true);
+
+    await quizDataFile.writeAsString(req.text, flush: true, encoding: utf8);
+  }
+
+  Future<void> saveFile(String title, {VoidCallback? isSuccess}) async {
+    String? id;
+    Directory? documentsDirectory;
+    Directory? tempDirectory;
     if (state.questions != null) {
-      final documentsDirectory = await getApplicationDocumentsDirectory();
+      try {
+        documentsDirectory = await getApplicationDocumentsDirectory();
+        tempDirectory = await getTemporaryDirectory();
 
-      final id = ref.read(questionIDListStateProvider.notifier).getUniqueID();
+        id = ref.read(questionIDListStateProvider.notifier).getUniqueID();
 
-      await movePhotoFile(id);
+        final movePhotoTask = compute(
+            _movePhotoFile,
+            MovePhotoReq(
+                id, documentsDirectory, tempDirectory, state.questions!));
+        await movePhotoTask;
+        final questionTask = compute(
+            replaceFile,
+            FileReq(
+                p.join(documentsDirectory.absolute.path,
+                    QuestionModel.questionPath, id, quizJsonFilePath),
+                jsonEncode(state.questions)));
 
-      final quizFile = File(p.join(documentsDirectory.absolute.path,
-          QuestionModel.questionPath, id, quizJsonFilePath));
+        final questionIDTask = compute(
+            replaceFile,
+            FileReq(
+                p.join(documentsDirectory.absolute.path,
+                    QuestionModel.questionPath, id, idFilePath),
+                jsonEncode(QuestionColumn(title: title, id: id))));
 
-      if (await quizFile.exists()) {
-        await quizFile.delete();
+        await questionTask;
+        await questionIDTask;
+        isSuccess?.call();
+      } catch (e) {
+        if (id != null && documentsDirectory != null) {
+          safeDeleteDirectory(p.join(documentsDirectory.absolute.path,
+              QuestionModel.questionPath, id));
+        }
+        debugPrint("$e");
       }
+    }
+  }
 
-      final quizDataFile =
-          await quizFile.create(exclusive: false, recursive: true);
-      await quizDataFile.writeAsString(jsonEncode(state.questions),
-          flush: true, encoding: utf8);
-
-      final questionIDJson = File(p.join(documentsDirectory.absolute.path,
-          QuestionModel.questionPath, id, idFilePath));
-
-      if (await questionIDJson.exists()) {
-        await questionIDJson.delete();
-      }
-      final quizColumnData =
-          await questionIDJson.create(exclusive: false, recursive: true);
-
-      await quizColumnData
-          .writeAsString(jsonEncode(QuestionColumn(title: title, id: id)));
+  static Future<void> safeDeleteDirectory(String directory) async {
+    try {
+      final d = Directory(directory);
+      await d.delete(recursive: true);
+    } catch (e) {
+      debugPrint("$e");
     }
   }
 

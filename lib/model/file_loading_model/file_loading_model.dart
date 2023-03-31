@@ -27,7 +27,8 @@ class FileLoadingState with _$FileLoadingState {
   }
 
   String get imageMessage {
-    final text = imageErrorText ?? files?.path ?? "Error happend";
+    final text =
+        imageErrorText ?? imageDirectory?.path ?? "None Image Directory";
     return text;
   }
 

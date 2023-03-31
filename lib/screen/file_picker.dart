@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:question_marks/router/router.dart';
 import 'package:question_marks/state/file_loading_state/file_loading_state_notifier.dart';
 
 import '../model/file_loading_model/file_loading_model.dart';
+
+final filePickerTitleProvider =
+    StateProvider.autoDispose((ref) => TextEditingController());
+
+final filePickerTitleValueProvider = StateProvider.autoDispose(
+    (ref) => ref.watch(filePickerTitleProvider).value);
 
 class FilePickerScreen extends ConsumerWidget {
   const FilePickerScreen({super.key});
@@ -14,26 +21,8 @@ class FilePickerScreen extends ConsumerWidget {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          const SliverAppBar(
-            title: Text("File Picker"),
-          ),
-          SliverList(
-            delegate: SliverChildListDelegate([
-              const TitleTextFieldColumn(),
-              if (ref.watch(fileLoadingSessionProvider.select((value) =>
-                  (value.fileErrorText != null || value.files != null))))
-                const SelectedFileText(),
-              if (ref.watch(fileLoadingSessionProvider
-                  .select((value) => (value.questions != null))))
-                const ImageFileText(),
-              TextButton(
-                  onPressed: () async => FileLoadingSession.launchTempFile(),
-                  child: const Text("launch temp file")),
-              TextButton(
-                  onPressed: () async => FileLoadingSession.launchAppDocument(),
-                  child: const Text("launch_app_docs"))
-            ]),
-          ),
+          const _FilePickerAppBar(),
+          const _FilePickerBody(),
           if (ref.watch(fileLoadingSessionProvider
               .select((value) => (value.questions == null))))
             const FileSelector(),
@@ -43,45 +32,86 @@ class FilePickerScreen extends ConsumerWidget {
   }
 }
 
+class _FilePickerBody extends ConsumerWidget {
+  const _FilePickerBody();
+
+  @override
+  Widget build(BuildContext context, ref) {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+        const TitleTextFieldColumn(),
+        if (ref.watch(fileLoadingSessionProvider.select(
+            (value) => (value.fileErrorText != null || value.files != null))))
+          const SelectedFileText(),
+        if (ref.watch(fileLoadingSessionProvider
+            .select((value) => (value.questions != null))))
+          const ImageFileText(),
+      ]),
+    );
+  }
+}
+
+class _FilePickerAppBar extends StatelessWidget {
+  const _FilePickerAppBar();
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverAppBar(
+      title: const Text("File Picker"),
+      actions: [
+        PopupMenuButton(
+            itemBuilder: (context) => [
+                  PopupMenuItem(
+                    child: Text("Open Temp file"),
+                    onTap: () => FileLoadingSession.launchTempFile(),
+                  ),
+                  PopupMenuItem(
+                    child: Text("Open document file"),
+                    onTap: () => FileLoadingSession.launchAppDocument(),
+                  )
+                ])
+      ],
+    );
+  }
+}
+
 class TitleTextFieldColumn extends ConsumerStatefulWidget {
   const TitleTextFieldColumn({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<TitleTextFieldColumn> createState() =>
+  ConsumerState<ConsumerStatefulWidget> createState() =>
       _TitleTextFieldColumnState();
 }
 
 class _TitleTextFieldColumnState extends ConsumerState<TitleTextFieldColumn> {
-  late final TextEditingController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
+    final isEmpty = ref.watch(
+        filePickerTitleValueProvider.select((value) => value.text == ''));
+    final isQuestionsNull = ref.watch(
+        fileLoadingSessionProvider.select((value) => value.questions == null));
     return ListTile(
       title: TextField(
-        controller: _controller,
+        controller: ref.watch(filePickerTitleProvider),
         decoration: const InputDecoration(
             border: OutlineInputBorder(), labelText: 'Title Name'),
+        onChanged: (value) {
+          ref.read(filePickerTitleValueProvider.notifier).state =
+              ref.read(filePickerTitleProvider).value;
+        },
       ),
-      trailing: TextButton(
-          onPressed: () async {
-            if (_controller.text != '') {
-              ref
-                  .watch(fileLoadingSessionProvider.notifier)
-                  .saveFile(_controller.text);
-            }
-          },
+      trailing: FilledButton(
+          onPressed: (!isEmpty && !isQuestionsNull)
+              ? () async {
+                  ref.read(fileLoadingSessionProvider.notifier).saveFile(
+                      ref.read(filePickerTitleProvider
+                          .select((value) => value.text)), isSuccess: () {
+                    if (mounted) {
+                      const HomeRoute().go(context);
+                    }
+                  });
+                }
+              : null,
           child: const Text("convert")),
     );
   }
@@ -96,7 +126,7 @@ class ImageFileText extends ConsumerWidget {
       trailing: FilledButton.tonal(
         onPressed: () =>
             ref.read(fileLoadingSessionProvider.notifier).openImageDirectory(),
-        child: const Text("Select Directory"),
+        child: const Text("Import Directory"),
       ),
       title: const Text(
         "Image File Path",
