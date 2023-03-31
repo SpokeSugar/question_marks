@@ -51,7 +51,8 @@ class MyHomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final length =
-        ref.watch(questionIDListStateProvider.select((value) => value.length));
+        ref.watch(questionIDListStateProvider.select((value) => value.value));
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -63,21 +64,22 @@ class MyHomePage extends ConsumerWidget {
               HomeMenu(),
             ],
           ),
-          if (length >= 1)
+          if ((length?.length ?? 0) >= 1)
             SliverList(
               delegate: SliverChildBuilderDelegate(
                   (_, index) => ListTile(
                         title: Text(
                           ref.watch(
                             questionIDListStateProvider.select(
-                              (value) => value[index].title,
+                              (value) =>
+                                  value.value?[index].title ?? "Error Title",
                             ),
                           ),
                         ),
                         onTap: () => QuestionPageRoute(
                           ref.read(
                             questionIDListStateProvider.select(
-                              (value) => value[index].id,
+                              (value) => value.value![index].id,
                             ),
                           ),
                           sessionID: ref.read(sessionListProvider.notifier
@@ -96,9 +98,18 @@ class MyHomePage extends ConsumerWidget {
                                   )
                                 ]),
                       ),
-                  childCount: length),
+                  childCount: length?.length ?? 0),
             ),
-          if (length == 0)
+          if (ref.watch(questionIDListStateProvider
+                  .select((value) => value.isLoading)) ||
+              ref.watch(questionIDListStateProvider
+                  .select((value) => value.isReloading)) ||
+              ref.watch(questionIDListStateProvider
+                  .select((value) => value.isRefreshing)))
+            const SliverFillRemaining(
+              child: CircularProgressIndicator(),
+            ),
+          if ((length?.length ?? 0) == 0)
             const SliverFillRemaining(
               child: Center(child: Text("List is Empty")),
             )

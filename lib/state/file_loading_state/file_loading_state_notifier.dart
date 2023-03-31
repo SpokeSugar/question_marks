@@ -51,7 +51,7 @@ class FileLoadingSession extends _$FileLoadingSession {
       final json = await convertJson(file);
       return ref
           .watch(questionIDListStateProvider.notifier)
-          .setID('Test Products', json);
+          .setIDData('Test Products', json);
     }
     return null;
   }
@@ -141,7 +141,7 @@ class FileLoadingSession extends _$FileLoadingSession {
 
   static Future<void> moveTempFile() async {}
 
-  Future<List<QuestionModel>> convertJson(XFile file) async {
+  static Future<List<QuestionModel>> convertJson(XFile file) async {
     final fileString = await file.readAsString();
     final List<dynamic> jsonData = jsonDecode(fileString);
     List<QuestionModel> questionList =
@@ -254,6 +254,7 @@ class FileLoadingSession extends _$FileLoadingSession {
         await questionTask;
         await questionIDTask;
         isSuccess?.call();
+        ref.watch(questionIDListStateProvider.notifier).getFromDirectory();
       } catch (e) {
         if (id != null && documentsDirectory != null) {
           safeDeleteDirectory(p.join(documentsDirectory.absolute.path,

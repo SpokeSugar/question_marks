@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -16,33 +17,91 @@ part 'question_id_list.g.dart';
 @Riverpod(keepAlive: true)
 class QuestionIDListState extends _$QuestionIDListState {
   @override
-  List<QuestionColumn> build() {
-    return [QuestionColumn(title: "Test Title", id: const Uuid().v4())];
+  FutureOr<List<QuestionColumn>> build() async {
+    getFromDirectory();
+    return <QuestionColumn>[];
   }
 
-  List<String> get getIDList => state.map((e) => e.id).toList();
+  List<String> get getIDList => state.value!.map((e) => e.id).toList();
 
-  Future<void> getIDColumn() async {
-    if (kIsWeb) {
-    } else {
-      final appDocs = await getApplicationDocumentsDirectory();
-      final directory =
-          Directory(p.join(appDocs.absolute.path, QuestionModel.questionPath));
+  Future<void> getFromDirectory({Directory? directory}) async {
+    if (directory == null && !kIsWeb) {
+      final getDirectory = await getApplicationDocumentsDirectory();
+      directory = Directory(
+          p.join(getDirectory.absolute.path, QuestionModel.questionPath));
+    }
+    if (directory != null) {
+      state = await AsyncValue.guard(() async => UnmodifiableListView(
+          [...(await getList(directory!)), ...?state.value]));
     }
   }
 
-  String setID(String title, List<QuestionModel> model) {
+  static Future<List<QuestionColumn>> getList(Directory directory) async {
+    List<QuestionColumn> questionIDList = [];
+
+    final sortedList = directory.listSync().toList();
+    sortedList
+        .sort((a, b) => b.statSync().changed.compareTo(a.statSync().changed));
+    for (final i in sortedList) {
+      if (i is Directory) {
+        final id = File(p.join(i.absolute.path, 'id.json'));
+        if (await id.exists()) {
+          try {
+            questionIDList = [
+              QuestionColumn.fromJson(
+                  jsonDecode(await id.readAsString(encoding: utf8))),
+              ...questionIDList
+            ];
+          } catch (e) {
+            debugPrint("$e");
+          }
+        }
+      }
+    }
+    return questionIDList;
+  }
+
+  Future<void> setIDColumn(String title, String id) async {
+    state = AsyncData(UnmodifiableListView(
+        [QuestionColumn(title: title, id: id), ...?state.value]));
+  }
+
+  String setIDData(String title, List<QuestionModel> model) {
     final id = getUniqueID();
     ref.watch(questionManagerProvider.call(id).notifier).setValue(model);
-    state =
-        UnmodifiableListView([...state, QuestionColumn(title: title, id: id)]);
+    state = AsyncData(UnmodifiableListView(
+        [QuestionColumn(title: title, id: id), ...?state.value]));
     return id;
   }
 
-  void removeID(int value) {
-    final newList = state.toList();
-    newList.removeAt(value);
-    state = UnmodifiableListView(newList);
+  static Future<void> removeIDFromFile(Directory quizDirectory) async {
+    if (quizDirectory.existsSync()) {
+      quizDirectory.delete(recursive: true);
+    }
+  }
+
+  Future<void> removeID(int value) async {
+    state = await AsyncValue.guard(() async {
+      final newList = state.value?.toList();
+
+      final docDoc = await getApplicationDocumentsDirectory();
+      if ((state.value?.length ?? 0) > value) {
+        await compute(
+          removeIDFromFile,
+          Directory(
+            p.joinAll(
+              [
+                docDoc.absolute.path,
+                QuestionModel.questionPath,
+                if (state.value?[value].id != null) state.value![value].id
+              ],
+            ),
+          ),
+        );
+      }
+      newList?.removeAt(value);
+      return UnmodifiableListView([...?newList]);
+    });
   }
 
   String getUniqueID() {

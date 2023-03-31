@@ -6,7 +6,7 @@ part of 'question_manager.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$questionManagerHash() => r'136972c14878a49caf6eb0699699fd24cf470e07';
+String _$questionManagerHash() => r'4a78ebda6599ed3ddac987964132f0e7e0475b9d';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,10 +30,10 @@ class _SystemHash {
 }
 
 abstract class _$QuestionManager
-    extends BuildlessNotifier<List<QuestionModel>> {
+    extends BuildlessAsyncNotifier<List<QuestionModel>> {
   late final String id;
 
-  List<QuestionModel> build(
+  Future<List<QuestionModel>> build(
     String id,
   );
 }
@@ -43,7 +43,7 @@ abstract class _$QuestionManager
 const questionManagerProvider = QuestionManagerFamily();
 
 /// See also [QuestionManager].
-class QuestionManagerFamily extends Family<List<QuestionModel>> {
+class QuestionManagerFamily extends Family<AsyncValue<List<QuestionModel>>> {
   /// See also [QuestionManager].
   const QuestionManagerFamily();
 
@@ -82,7 +82,7 @@ class QuestionManagerFamily extends Family<List<QuestionModel>> {
 
 /// See also [QuestionManager].
 class QuestionManagerProvider
-    extends NotifierProviderImpl<QuestionManager, List<QuestionModel>> {
+    extends AsyncNotifierProviderImpl<QuestionManager, List<QuestionModel>> {
   /// See also [QuestionManager].
   QuestionManagerProvider(
     this.id,
@@ -115,7 +115,7 @@ class QuestionManagerProvider
   }
 
   @override
-  List<QuestionModel> runNotifierBuild(
+  Future<List<QuestionModel>> runNotifierBuild(
     covariant QuestionManager notifier,
   ) {
     return notifier.build(

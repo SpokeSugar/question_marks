@@ -36,8 +36,11 @@ class AnswerPageRoute extends GoRouteData {
               onNextTap: (questionListId != null && !showOnly)
                   ? () {
                       final length = ref
-                          .watch(questionManagerProvider.call(questionListId!))
-                          .length;
+                              .watch(
+                                  questionManagerProvider.call(questionListId!))
+                              .value
+                              ?.length ??
+                          0;
 
                       if (ref
                               .watch(questionSessionsProvider.call(sessionId))

@@ -1,8 +1,13 @@
 import 'dart:collection';
+import 'dart:convert';
+import 'dart:io';
 import 'dart:math' as math;
 
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:question_marks/model/answer_result/answer_result.dart';
 import 'package:question_marks/model/question/question.dart';
+import 'package:question_marks/state/file_loading_state/file_loading_state_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../model/answer/answer.dart';
@@ -77,20 +82,30 @@ class QuestionManager extends _$QuestionManager {
   ]);
 
   QuestionModel? get random {
-    if (state.isNotEmpty) {
-      final value = math.Random().nextInt(state.length);
-      return state[value - 1];
+    if ((state.value?.isNotEmpty ?? false)) {
+      final value = math.Random().nextInt((state.value?.length ?? 0));
+      return state.value?[value - 1];
     }
     return null;
   }
 
   @override
-  List<QuestionModel> build(String id) {
+  Future<List<QuestionModel>> build(String id) async {
+    final appDoc = await getApplicationDocumentsDirectory();
+    final file = File(p.join(appDoc.absolute.path, QuestionModel.questionPath,
+        id, FileLoadingSession.quizJsonFilePath));
+    if (file.existsSync()) {
+      final fileString = await file.readAsString();
+      final List<dynamic> jsonData = jsonDecode(fileString);
+      List<QuestionModel> questionList =
+          jsonData.map((e) => QuestionModel.fromJson(e)).toList();
+      return questionList;
+    }
     return UnmodifiableListView(damyData);
   }
 
   void setValue(List<QuestionModel> model) {
-    state = UnmodifiableListView(model);
+    state = AsyncData(UnmodifiableListView(model));
   }
 }
 
