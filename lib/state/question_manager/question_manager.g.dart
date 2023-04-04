@@ -6,7 +6,7 @@ part of 'question_manager.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$questionManagerHash() => r'4a78ebda6599ed3ddac987964132f0e7e0475b9d';
+String _$questionManagerHash() => r'3f2dcfe3a7dec878bfb5c31d93d7939d1c9853fc';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,7 +30,7 @@ class _SystemHash {
 }
 
 abstract class _$QuestionManager
-    extends BuildlessAsyncNotifier<List<QuestionModel>> {
+    extends BuildlessAutoDisposeAsyncNotifier<List<QuestionModel>> {
   late final String id;
 
   Future<List<QuestionModel>> build(
@@ -81,8 +81,8 @@ class QuestionManagerFamily extends Family<AsyncValue<List<QuestionModel>>> {
 }
 
 /// See also [QuestionManager].
-class QuestionManagerProvider
-    extends AsyncNotifierProviderImpl<QuestionManager, List<QuestionModel>> {
+class QuestionManagerProvider extends AutoDisposeAsyncNotifierProviderImpl<
+    QuestionManager, List<QuestionModel>> {
   /// See also [QuestionManager].
   QuestionManagerProvider(
     this.id,

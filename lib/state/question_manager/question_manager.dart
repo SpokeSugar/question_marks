@@ -14,7 +14,7 @@ import '../../model/answer/answer.dart';
 
 part 'question_manager.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class QuestionManager extends _$QuestionManager {
   static List<QuestionModel> damyData = UnmodifiableListView([
     const QuestionModel(
@@ -104,11 +104,10 @@ class QuestionManager extends _$QuestionManager {
               appDoc.absolute.path,
               QuestionModel.questionPath,
               id,
-              FileLoadingSession.quizJsonFilePath,
               FileLoadingSession.imageFolderPath,
-              item.imagePath));
+              item.imagePath?.toLowerCase()));
           if (imageFolder.existsSync()) {
-            return item.copyWith(imagePath: imageFolder.path);
+            return item.copyWith(imagePath: imageFolder.absolute.path);
           }
         }
         return item.copyWith(imagePath: null);

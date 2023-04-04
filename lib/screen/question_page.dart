@@ -22,7 +22,6 @@ class QuestionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final canPop = ModalRoute.of(context)?.canPop ?? false;
-
     return Scaffold(
       body: CustomScrollView(
         slivers: [

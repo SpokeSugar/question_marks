@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:question_marks/router/router.dart';
 import 'package:question_marks/state/file_loading_state/file_loading_state_notifier.dart';
 
+import '../component/back_home_button.dart';
+import '../component/title_text_field.dart';
 import '../model/file_loading_model/file_loading_model.dart';
-
-final filePickerTitleProvider =
-    StateProvider.autoDispose((ref) => TextEditingController());
-
-final filePickerTitleValueProvider = StateProvider.autoDispose(
-    (ref) => ref.watch(filePickerTitleProvider).value);
 
 class FilePickerScreen extends ConsumerWidget {
   const FilePickerScreen({super.key});
@@ -25,7 +20,7 @@ class FilePickerScreen extends ConsumerWidget {
           const _FilePickerBody(),
           if (ref.watch(fileLoadingSessionProvider
               .select((value) => (value.questions == null))))
-            const FileSelector(),
+            const _FileSelector(),
         ],
       ),
     );
@@ -42,7 +37,7 @@ class _FilePickerBody extends ConsumerWidget {
         const TitleTextFieldColumn(),
         if (ref.watch(fileLoadingSessionProvider.select(
             (value) => (value.fileErrorText != null || value.files != null))))
-          const SelectedFileText(),
+          const SelectedFileButton(),
         if (ref.watch(fileLoadingSessionProvider
             .select((value) => (value.questions != null))))
           const ImageFileText(),
@@ -58,61 +53,20 @@ class _FilePickerAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverAppBar(
       title: const Text("File Picker"),
+      leading: const BackHomeButton(),
       actions: [
         PopupMenuButton(
             itemBuilder: (context) => [
                   PopupMenuItem(
-                    child: Text("Open Temp file"),
+                    child: const Text("Open Temp file"),
                     onTap: () => FileLoadingSession.launchTempFile(),
                   ),
                   PopupMenuItem(
-                    child: Text("Open document file"),
+                    child: const Text("Open document file"),
                     onTap: () => FileLoadingSession.launchAppDocument(),
                   )
                 ])
       ],
-    );
-  }
-}
-
-class TitleTextFieldColumn extends ConsumerStatefulWidget {
-  const TitleTextFieldColumn({Key? key}) : super(key: key);
-
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _TitleTextFieldColumnState();
-}
-
-class _TitleTextFieldColumnState extends ConsumerState<TitleTextFieldColumn> {
-  @override
-  Widget build(BuildContext context) {
-    final isEmpty = ref.watch(
-        filePickerTitleValueProvider.select((value) => value.text == ''));
-    final isQuestionsNull = ref.watch(
-        fileLoadingSessionProvider.select((value) => value.questions == null));
-    return ListTile(
-      title: TextField(
-        controller: ref.watch(filePickerTitleProvider),
-        decoration: const InputDecoration(
-            border: OutlineInputBorder(), labelText: 'Title Name'),
-        onChanged: (value) {
-          ref.read(filePickerTitleValueProvider.notifier).state =
-              ref.read(filePickerTitleProvider).value;
-        },
-      ),
-      trailing: FilledButton(
-          onPressed: (!isEmpty && !isQuestionsNull)
-              ? () async {
-                  ref.read(fileLoadingSessionProvider.notifier).saveFile(
-                      ref.read(filePickerTitleProvider
-                          .select((value) => value.text)), isSuccess: () {
-                    if (mounted) {
-                      const HomeRoute().go(context);
-                    }
-                  });
-                }
-              : null,
-          child: const Text("convert")),
     );
   }
 }
@@ -142,8 +96,8 @@ class ImageFileText extends ConsumerWidget {
   }
 }
 
-class SelectedFileText extends ConsumerWidget {
-  const SelectedFileText({super.key});
+class SelectedFileButton extends ConsumerWidget {
+  const SelectedFileButton({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -166,10 +120,8 @@ class SelectedFileText extends ConsumerWidget {
   }
 }
 
-class FileSelector extends ConsumerWidget {
-  const FileSelector({
-    super.key,
-  });
+class _FileSelector extends ConsumerWidget {
+  const _FileSelector();
 
   @override
   Widget build(BuildContext context, ref) {

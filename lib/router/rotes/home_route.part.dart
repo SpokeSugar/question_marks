@@ -11,8 +11,6 @@ class HomeRoute extends GoRouteData {
     if (kIsWeb) {
       return const WebEntry();
     }
-    return MyHomePage(
-      title: context.appL10n.helloWorld,
-    );
+    return const MyHomePage();
   }
 }

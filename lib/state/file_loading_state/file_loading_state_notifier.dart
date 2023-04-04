@@ -120,9 +120,12 @@ class FileLoadingSession extends _$FileLoadingSession {
               final tempFile =
                   File(p.join(tempImageDirectory.absolute.path, imagePath));
 
-              await file.copy(
+              final copyFile = await file.copy(
                 tempFile.path,
               );
+
+              await copyFile.rename(p.join(
+                  tempImageDirectory.absolute.path, imagePath.toLowerCase()));
             }
           } catch (e) {
             debugPrint(

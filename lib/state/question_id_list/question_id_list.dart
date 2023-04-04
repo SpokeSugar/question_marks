@@ -14,10 +14,11 @@ import '../../model/question/question.dart';
 
 part 'question_id_list.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class QuestionIDListState extends _$QuestionIDListState {
   @override
   FutureOr<List<QuestionColumn>> build() async {
+    ref.keepAlive();
     getFromDirectory();
     return <QuestionColumn>[];
   }
@@ -31,8 +32,8 @@ class QuestionIDListState extends _$QuestionIDListState {
           p.join(getDirectory.absolute.path, QuestionModel.questionPath));
     }
     if (directory != null) {
-      state = await AsyncValue.guard(() async => UnmodifiableListView(
-          [...(await getList(directory!)), ...?state.value]));
+      state = await AsyncValue.guard(
+          () async => UnmodifiableListView([...(await getList(directory!))]));
     }
   }
 
@@ -40,8 +41,10 @@ class QuestionIDListState extends _$QuestionIDListState {
     List<QuestionColumn> questionIDList = [];
 
     final sortedList = directory.listSync().toList();
+
     sortedList
         .sort((a, b) => b.statSync().changed.compareTo(a.statSync().changed));
+
     for (final i in sortedList) {
       if (i is Directory) {
         final id = File(p.join(i.absolute.path, 'id.json'));
