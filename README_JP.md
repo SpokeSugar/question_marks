@@ -11,6 +11,10 @@ desktop環境以外ではデバッグをしていないため、予期せぬ不�
 
 現状AndroidではFile_Selectorパッケージが[対応していない](https://github.com/flutter/flutter/issues/110098)ため、ファイルを開くことができません。
 
+#### 環境
+flutter ^ 3.7.9  
+ビルドしたいOSに合わせたビルド環境
+
 - Android
   https://docs.flutter.dev/deployment/android
 - iOS
