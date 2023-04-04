@@ -1,3 +1,4 @@
+[English](/README.md) 日本語
 # Question Marks
 
 ## Question Marksについて
