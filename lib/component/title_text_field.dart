@@ -26,8 +26,7 @@ class _TitleTextFieldColumnState extends ConsumerState<TitleTextFieldColumn> {
     return ListTile(
       title: TextField(
         controller: ref.watch(filePickerTitleProvider),
-        decoration: const InputDecoration(
-            border: OutlineInputBorder(), labelText: 'Title Name'),
+        decoration: const InputDecoration(labelText: 'Title Name'),
       ),
       trailing: FilledButton(
           onPressed: (!isEmpty && !isQuestionsNull)

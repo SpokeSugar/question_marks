@@ -7,11 +7,22 @@ part 'answer.g.dart';
 class AnswerModel with _$AnswerModel {
   factory AnswerModel.fromJson(Map<String, dynamic> json) =>
       _$AnswerModelFromJson(json);
-
   const factory AnswerModel({
     required String uuid,
     required String answer,
     String? exp,
     required bool isCorrect,
   }) = _answerModel;
+}
+
+extension AnswerModelIsCollectCheck on Iterable<AnswerModel> {
+  bool isCollectExist() {
+    bool exits = false;
+    forEach((e) {
+      if (e.isCorrect) {
+        exits = true;
+      }
+    });
+    return exits;
+  }
 }

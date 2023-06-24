@@ -14,10 +14,19 @@ _$_answerModel _$$_answerModelFromJson(Map<String, dynamic> json) =>
       isCorrect: json['isCorrect'] as bool,
     );
 
-Map<String, dynamic> _$$_answerModelToJson(_$_answerModel instance) =>
-    <String, dynamic>{
-      'uuid': instance.uuid,
-      'answer': instance.answer,
-      'exp': instance.exp,
-      'isCorrect': instance.isCorrect,
-    };
+Map<String, dynamic> _$$_answerModelToJson(_$_answerModel instance) {
+  final val = <String, dynamic>{
+    'uuid': instance.uuid,
+    'answer': instance.answer,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('exp', instance.exp);
+  val['isCorrect'] = instance.isCorrect;
+  return val;
+}

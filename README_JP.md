@@ -1,4 +1,5 @@
 [English](/README.md) 日本語
+
 # Question Marks
 
 ## Question Marksについて
@@ -9,11 +10,20 @@
 
 desktop環境以外ではデバッグをしていないため、予期せぬ不具合等がある可能性があります。
 
-現状AndroidではFile_Selectorパッケージが[対応していない](https://github.com/flutter/flutter/issues/110098)ため、ファイルを開くことができません。
+現状AndroidではFile_Selectorパッケージが[対応していない](https://github.com/flutter/flutter/issues/110098)
+ため、ファイルを開くことができません。
 
 #### 環境
+
 flutter ^ 3.7.9  
 ビルドしたいOSに合わせたビルド環境
+
+インストール方法は[こちら](https://docs.flutter.dev/get-started/install)
+
+##### 注意点
+
+このリポジトリにはパッケージが含まれていません。 必ずプロジェクトディレクトリ内で
+`flutter pub get`コマンドを実行するようにしてください。
 
 - Android
   https://docs.flutter.dev/deployment/android

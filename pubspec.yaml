@@ -54,10 +54,24 @@ dependencies:
   url_launcher: ^6.1.10
   adaptive_breakpoints: ^0.1.6
 
+  window_size:
+    git:
+      url: https://github.com/google/flutter-desktop-embedding.git
+      path: plugins/window_size
+      ref: 6c66ad2
+  restartable:
+    git:
+      url: https://github.com/SpokeSugar/restartable.git
+      ref: v0.0.1
+
+  collection: ^1.17.1
+
+
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your

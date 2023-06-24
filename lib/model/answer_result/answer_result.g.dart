@@ -70,8 +70,17 @@ _$_AnswerID _$$_AnswerIDFromJson(Map<String, dynamic> json) => _$_AnswerID(
       hash: json['hash'] as int?,
     );
 
-Map<String, dynamic> _$$_AnswerIDToJson(_$_AnswerID instance) =>
-    <String, dynamic>{
-      'uuid': instance.uuid,
-      'hash': instance.hash,
-    };
+Map<String, dynamic> _$$_AnswerIDToJson(_$_AnswerID instance) {
+  final val = <String, dynamic>{
+    'uuid': instance.uuid,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('hash', instance.hash);
+  return val;
+}

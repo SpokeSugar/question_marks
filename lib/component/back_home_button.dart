@@ -11,7 +11,8 @@ class BackHomeButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return BackButton(
-      onPressed: () => ref.read(homeBottomBarIndexProvider.notifier).state = 0,
+      onPressed: () =>
+          ref.read(homeBottomBarIndexProvider.notifier).update((state) => 0),
     );
   }
 }

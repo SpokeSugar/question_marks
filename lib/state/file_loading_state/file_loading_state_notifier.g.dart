@@ -7,7 +7,7 @@ part of 'file_loading_state_notifier.dart';
 // **************************************************************************
 
 String _$fileLoadingSessionHash() =>
-    r'366ee8d89099478c200bd03cffc467f02654ae7c';
+    r'b3d2414b10f5009090347e3d86c72a12176c95c6';
 
 /// See also [FileLoadingSession].
 @ProviderFor(FileLoadingSession)

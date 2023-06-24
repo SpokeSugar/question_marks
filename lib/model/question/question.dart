@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 import '../answer/answer.dart';
 import '../answer_result/answer_result.dart';
@@ -49,5 +50,16 @@ class QuestionModel with _$QuestionModel {
     return list.where((e) =>
         ids.contains(AnswerID(uuid: e.uuid)) ||
         ids.contains(AnswerID(uuid: e.uuid, hash: e.hashCode)));
+  }
+
+  String? getUniqueAnswerID() {
+    final idList = list.map((e) => e.uuid);
+
+    while (true) {
+      final newID = const Uuid().v4();
+      if (!(idList.contains(newID))) {
+        return newID;
+      }
+    }
   }
 }

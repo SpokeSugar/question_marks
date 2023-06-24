@@ -16,10 +16,19 @@ _$_QuestionModel _$$_QuestionModelFromJson(Map<String, dynamic> json) =>
       uuid: json['uuid'] as String,
     );
 
-Map<String, dynamic> _$$_QuestionModelToJson(_$_QuestionModel instance) =>
-    <String, dynamic>{
-      'q': instance.q,
-      'list': instance.list,
-      'imagePath': instance.imagePath,
-      'uuid': instance.uuid,
-    };
+Map<String, dynamic> _$$_QuestionModelToJson(_$_QuestionModel instance) {
+  final val = <String, dynamic>{
+    'q': instance.q,
+    'list': instance.list,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('imagePath', instance.imagePath);
+  val['uuid'] = instance.uuid;
+  return val;
+}

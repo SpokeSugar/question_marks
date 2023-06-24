@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:question_marks/state/file_loading_state/file_loading_state_notifier.dart';
+import 'package:restartable/restartable.dart';
 
 import '../component/back_home_button.dart';
 import '../component/title_text_field.dart';
@@ -64,6 +65,10 @@ class _FilePickerAppBar extends StatelessWidget {
                   PopupMenuItem(
                     child: const Text("Open document file"),
                     onTap: () => FileLoadingSession.launchAppDocument(),
+                  ),
+                  PopupMenuItem(
+                    child: const Text("Reset App"),
+                    onTap: () => RestartWidget.reset(context),
                   )
                 ])
       ],

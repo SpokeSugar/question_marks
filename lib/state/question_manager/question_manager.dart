@@ -9,6 +9,7 @@ import 'package:question_marks/model/answer_result/answer_result.dart';
 import 'package:question_marks/model/question/question.dart';
 import 'package:question_marks/state/file_loading_state/file_loading_state_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../model/answer/answer.dart';
 
@@ -125,6 +126,16 @@ class QuestionManager extends _$QuestionManager {
 extension GetModelExtention on List<QuestionModel> {
   Map<String, QuestionModel> get toQuestionMap =>
       Map.fromEntries(map((e) => MapEntry(e.uuid, e)));
+
+  String uniqueID() {
+    final idList = map((e) => e.uuid);
+    while (true) {
+      final uuid = const Uuid().v4();
+      if (!idList.contains(uuid)) {
+        return uuid;
+      }
+    }
+  }
 }
 
 extension AnswerModelListExtension on List<AnswerModel> {
