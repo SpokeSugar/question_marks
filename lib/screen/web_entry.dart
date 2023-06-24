@@ -11,7 +11,7 @@ class WebEntry extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Web Entry"),
+        title: const Text("Web Entry"),
       ),
       body: const Center(
         child: WebOpenFileButton(),

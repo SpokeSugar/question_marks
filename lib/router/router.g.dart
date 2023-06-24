@@ -22,14 +22,14 @@ GoRoute get $answerPageRoute => GoRouteData.$route(
 
 extension $AnswerPageRouteExtension on AnswerPageRoute {
   static AnswerPageRoute _fromState(GoRouterState state) => AnswerPageRoute(
-        sessionId: state.params['sessionId']!,
-        resultIndex: int.parse(state.params['resultIndex']!),
-        questionListId: state.queryParams['question-list-id'],
+        sessionId: state.pathParameters['sessionId']!,
+        resultIndex: int.parse(state.pathParameters['resultIndex']!),
+        questionListId: state.queryParameters['question-list-id'],
         onAgain:
-            _$convertMapValue('on-again', state.queryParams, _$boolConverter) ??
+            _$convertMapValue('on-again', state.queryParameters, _$boolConverter) ??
                 false,
         showOnly: _$convertMapValue(
-                'show-only', state.queryParams, _$boolConverter) ??
+                'show-only', state.queryParameters, _$boolConverter) ??
             true,
       );
 
@@ -138,9 +138,9 @@ GoRoute get $questionPageRoute => GoRouteData.$route(
 
 extension $QuestionPageRouteExtension on QuestionPageRoute {
   static QuestionPageRoute _fromState(GoRouterState state) => QuestionPageRoute(
-        state.params['questionListId']!,
-        sessionID: state.params['sessionID']!,
-        index: _$convertMapValue('index', state.queryParams, int.parse) ?? 0,
+        state.pathParameters['questionListId']!,
+        sessionID: state.pathParameters['sessionID']!,
+        index: _$convertMapValue('index', state.queryParameters, int.parse) ?? 0,
       );
 
   String get location => GoRouteData.$location(
@@ -165,7 +165,7 @@ GoRoute get $resultRoute => GoRouteData.$route(
 
 extension $ResultRouteExtension on ResultRoute {
   static ResultRoute _fromState(GoRouterState state) => ResultRoute(
-        state.params['sessionID']!,
+        state.pathParameters['sessionID']!,
       );
 
   String get location => GoRouteData.$location(

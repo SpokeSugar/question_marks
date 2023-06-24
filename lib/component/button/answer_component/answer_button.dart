@@ -31,7 +31,7 @@ class _AnswerButtonBarState extends State<AnswerButtonBar> {
 
   @override
   Widget build(BuildContext context) {
-    final grabValue = context.grab<int?>(answerState);
+    final grabValue = answerState.grab(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,7 +49,7 @@ class _AnswerButtonBarState extends State<AnswerButtonBar> {
             for (int i = 0; i < widget.answers.length; i++)
               ChoiceChip(
                 label: Text(widget.answers[i].answer),
-                selected: i == context.grab<int?>(answerState),
+                selected: i == answerState.grab(context),
                 onSelected: (selected) {
                   answerState.value = selected ? i : null;
                 },
