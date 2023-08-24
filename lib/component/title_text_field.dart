@@ -8,21 +8,16 @@ final filePickerTitleProvider = ChangeNotifierProvider.autoDispose((ref) {
   return TextEditingController();
 });
 
-class TitleTextFieldColumn extends ConsumerStatefulWidget {
-  const TitleTextFieldColumn({Key? key}) : super(key: key);
+class TitleTextFieldColumn extends ConsumerWidget {
+  const TitleTextFieldColumn({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _TitleTextFieldColumnState();
-}
-
-class _TitleTextFieldColumnState extends ConsumerState<TitleTextFieldColumn> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     final isEmpty =
         ref.watch(filePickerTitleProvider.select((value) => value.text == ''));
     final isQuestionsNull = ref.watch(
         fileLoadingSessionProvider.select((value) => value.questions == null));
+
     return ListTile(
       title: TextField(
         controller: ref.watch(filePickerTitleProvider),
@@ -30,17 +25,15 @@ class _TitleTextFieldColumnState extends ConsumerState<TitleTextFieldColumn> {
       ),
       trailing: FilledButton(
           onPressed: (!isEmpty && !isQuestionsNull)
-              ? () async {
-                  ref.read(fileLoadingSessionProvider.notifier).saveFile(
-                      ref.read(filePickerTitleProvider
-                          .select((value) => value.text)), isSuccess: () {
-                    if (mounted) {
-                      const HomeRoute().go(context);
-                    }
-                  });
+              ? () {
+                  ref
+                      .read(fileLoadingSessionProvider.notifier)
+                      .saveFile(ref.read(filePickerTitleProvider
+                          .select((value) => value.text)))
+                      .then((value) => const HomeRoute().go(context));
                 }
               : null,
-          child: const Text("convert")),
+          child: const Text("Convert")),
     );
   }
 }

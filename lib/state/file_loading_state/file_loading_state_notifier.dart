@@ -19,6 +19,7 @@ import '../../logger.dart';
 import '../../model/answer/answer.dart';
 import '../../model/file_loading_model/file_loading_model.dart';
 import '../../model/question/question.dart';
+import '../home_index.dart';
 import '../question_id_list/question_id_list.dart';
 
 part 'file_loading_state_notifier.g.dart';
@@ -134,9 +135,7 @@ class FileLoadingSession extends _$FileLoadingSession {
 
             if (newList != null) {
               newList[i] = state.questions![i].copyWith(imagePath: null);
-              state = state.copyWith(
-                  imageErrorText: "Unload image: $e",
-                  questions: UnmodifiableListView<QuestionModel>(newList));
+              state = state.copyWith(questions: UnmodifiableListView(newList));
             }
           }
         }
@@ -144,7 +143,6 @@ class FileLoadingSession extends _$FileLoadingSession {
             imageDirectory: Directory(file), imageErrorText: null);
       } catch (e) {
         logger.w(e, stackTrace: StackTrace.current);
-        state = state.copyWith(imageErrorText: e.toString());
       }
     }
   }
@@ -264,8 +262,9 @@ class FileLoadingSession extends _$FileLoadingSession {
         await questionTask;
         await questionIDTask;
 
-        isSuccess?.call();
         ref.watch(questionIDListStateProvider.notifier).getFromDirectory();
+
+        ref.watch(homeBottomBarIndexProvider.notifier).state = 0;
       } catch (e) {
         if (id != null && documentsDirectory != null) {
           safeDeleteDirectory(p.join(documentsDirectory.absolute.path,
