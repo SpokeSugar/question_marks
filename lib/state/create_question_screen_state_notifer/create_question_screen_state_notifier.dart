@@ -11,6 +11,7 @@ import 'package:question_marks/state/question_id_list/question_id_list.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../logger.dart';
 import '../../model/answer/answer.dart';
 import '../../model/create_question_screen_state/create_question_screen_state.dart';
 import '../../model/file_request/file_request.dart';
@@ -58,7 +59,7 @@ class CreateQuestionScreenStateNotifier
       iList.add(i.copyWith(q: q, list: UnmodifiableListView(jList)));
     }
     state = state.copyWith(questionIDs: UnmodifiableListView(iList));
-    debugPrint(state.toString());
+    logger.d(state.toString());
   }
 
   List<QuestionModel> modelsCopy() {

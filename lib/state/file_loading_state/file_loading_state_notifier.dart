@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 
@@ -14,6 +15,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../logger.dart';
 import '../../model/answer/answer.dart';
 import '../../model/file_loading_model/file_loading_model.dart';
 import '../../model/question/question.dart';
@@ -83,7 +85,7 @@ class FileLoadingSession extends _$FileLoadingSession {
             state.copyWith(files: Directory(file.path), fileErrorText: null);
       } catch (e) {
         if (e is FormatException) {
-          debugPrint("${e.message},${e.source}");
+          logger.w("${e.message},${e.source}", stackTrace: StackTrace.current);
         }
         state = state.copyWith(fileErrorText: e.toString());
         rethrow;
@@ -107,11 +109,10 @@ class FileLoadingSession extends _$FileLoadingSession {
 
         await tempImageDirectory.create();
 
-        for (final i in state.questions!) {
+        for (int i = 0; i < state.questions!.length; i++) {
           try {
-            if (i.imagePath != null) {
-              final imagePath =
-                  (p.joinAll([...?i.imagePath?.split(RegExp(r'/'))]));
+            if (state.questions?[i].imagePath != null) {
+              final imagePath = state.questions![i].imagePath;
 
               final file = File(
                 p.join(imageFile.absolute.path, imagePath),
@@ -125,18 +126,24 @@ class FileLoadingSession extends _$FileLoadingSession {
               );
 
               await copyFile.rename(p.join(
-                  tempImageDirectory.absolute.path, imagePath.toLowerCase()));
+                  tempImageDirectory.absolute.path, imagePath?.toLowerCase()));
             }
           } catch (e) {
-            debugPrint(
-              "$e",
-            );
-            state = state.copyWith(imageErrorText: "Unload image: $e");
+            logger.w(e, stackTrace: StackTrace.current);
+            final newList = state.copyWith().questions?.toList();
+
+            if (newList != null) {
+              newList[i] = state.questions![i].copyWith(imagePath: null);
+              state = state.copyWith(
+                  imageErrorText: "Unload image: $e",
+                  questions: UnmodifiableListView<QuestionModel>(newList));
+            }
           }
         }
         state = state.copyWith(
             imageDirectory: Directory(file), imageErrorText: null);
       } catch (e) {
+        logger.w(e, stackTrace: StackTrace.current);
         state = state.copyWith(imageErrorText: e.toString());
       }
     }
@@ -170,7 +177,7 @@ class FileLoadingSession extends _$FileLoadingSession {
           .toList();
       String? filePath;
       if (i[2] != null && i[2] != '') {
-        filePath = i[2];
+        filePath = i[2].toString();
       }
       final List<AnswerModel> answers = [];
       final List<String> answerId = [];
@@ -264,7 +271,7 @@ class FileLoadingSession extends _$FileLoadingSession {
           safeDeleteDirectory(p.join(documentsDirectory.absolute.path,
               QuestionModel.questionPath, id));
         }
-        debugPrint("$e");
+        logger.w(e, stackTrace: StackTrace.current);
       }
     }
   }
@@ -274,7 +281,7 @@ class FileLoadingSession extends _$FileLoadingSession {
       final d = Directory(directory);
       await d.delete(recursive: true);
     } catch (e) {
-      debugPrint("$e");
+      logger.w(e, stackTrace: StackTrace.current);
     }
   }
 

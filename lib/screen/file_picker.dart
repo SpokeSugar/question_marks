@@ -133,9 +133,8 @@ class _FileSelector extends ConsumerWidget {
     return SliverFillRemaining(
       child: Center(
         child: FilledButton.tonal(
-          onPressed: () async {
-            ref.watch(fileLoadingSessionProvider.notifier).open();
-          },
+          onPressed: () async =>
+              ref.watch(fileLoadingSessionProvider.notifier).open(),
           child: const Text("File pick"),
         ),
       ),

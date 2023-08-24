@@ -7,7 +7,7 @@ part of 'create_question_screen_state_notifier.dart';
 // **************************************************************************
 
 String _$createQuestionScreenStateNotifierHash() =>
-    r'6e247aff7140ddd52c02c9ca7fd047fb09a04f93';
+    r'b2d4213b545321cfca6054ba31eeac09a61c4579';
 
 /// See also [CreateQuestionScreenStateNotifier].
 @ProviderFor(CreateQuestionScreenStateNotifier)
@@ -24,4 +24,5 @@ final createQuestionScreenStateNotifierProvider = AutoDisposeNotifierProvider<
 
 typedef _$CreateQuestionScreenStateNotifier
     = AutoDisposeNotifier<CreateQuestionScreenState>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

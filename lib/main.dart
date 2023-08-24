@@ -7,6 +7,8 @@ import 'package:question_marks/state/color_scheme_inject.dart';
 import 'package:restartable/restartable.dart';
 import 'package:window_size/window_size.dart';
 
+import 'logger.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   try {
@@ -14,7 +16,7 @@ void main() {
       setWindowMinSize(const Size(300, 300));
     }
   } catch (e) {
-    debugPrint(e.toString());
+    logger.e(e, stackTrace: StackTrace.current);
   }
 
   runApp(const RestartWidget(
