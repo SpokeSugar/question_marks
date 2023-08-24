@@ -20,12 +20,17 @@ class CreateQuestionsScreen extends StatelessWidget {
             leading: BackHomeButton(),
             title: Text("Create Questions"),
           ),
-          QuestionTitleSliver(),
-          QuestionCardsSliver(),
-          AddQuestionButtonColumn()
+          SliverFillRemaining(
+            child: Center(
+              child: Text('Unimplemented'),
+            ),
+          )
+          // QuestionTitleSliver(),
+          // QuestionCardsSliver(),
+          // AddQuestionButtonColumn()
         ],
       ),
-      floatingActionButton: CreateQuestionFab(),
+      // floatingActionButton: CreateQuestionFab(),
     );
   }
 }
