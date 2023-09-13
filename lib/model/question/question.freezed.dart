@@ -21,8 +21,9 @@ QuestionModel _$QuestionModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$QuestionModel {
   String get q => throw _privateConstructorUsedError;
-  List<AnswerModel> get list => throw _privateConstructorUsedError;
+  List<AnswerModel> get answers => throw _privateConstructorUsedError;
   String? get imagePath => throw _privateConstructorUsedError;
+  String? get explanation => throw _privateConstructorUsedError;
   String get uuid => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -37,7 +38,12 @@ abstract class $QuestionModelCopyWith<$Res> {
           QuestionModel value, $Res Function(QuestionModel) then) =
       _$QuestionModelCopyWithImpl<$Res, QuestionModel>;
   @useResult
-  $Res call({String q, List<AnswerModel> list, String? imagePath, String uuid});
+  $Res call(
+      {String q,
+      List<AnswerModel> answers,
+      String? imagePath,
+      String? explanation,
+      String uuid});
 }
 
 /// @nodoc
@@ -54,8 +60,9 @@ class _$QuestionModelCopyWithImpl<$Res, $Val extends QuestionModel>
   @override
   $Res call({
     Object? q = null,
-    Object? list = null,
+    Object? answers = null,
     Object? imagePath = freezed,
+    Object? explanation = freezed,
     Object? uuid = null,
   }) {
     return _then(_value.copyWith(
@@ -63,13 +70,17 @@ class _$QuestionModelCopyWithImpl<$Res, $Val extends QuestionModel>
           ? _value.q
           : q // ignore: cast_nullable_to_non_nullable
               as String,
-      list: null == list
-          ? _value.list
-          : list // ignore: cast_nullable_to_non_nullable
+      answers: null == answers
+          ? _value.answers
+          : answers // ignore: cast_nullable_to_non_nullable
               as List<AnswerModel>,
       imagePath: freezed == imagePath
           ? _value.imagePath
           : imagePath // ignore: cast_nullable_to_non_nullable
+              as String?,
+      explanation: freezed == explanation
+          ? _value.explanation
+          : explanation // ignore: cast_nullable_to_non_nullable
               as String?,
       uuid: null == uuid
           ? _value.uuid
@@ -87,7 +98,12 @@ abstract class _$$_QuestionModelCopyWith<$Res>
       __$$_QuestionModelCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String q, List<AnswerModel> list, String? imagePath, String uuid});
+  $Res call(
+      {String q,
+      List<AnswerModel> answers,
+      String? imagePath,
+      String? explanation,
+      String uuid});
 }
 
 /// @nodoc
@@ -102,8 +118,9 @@ class __$$_QuestionModelCopyWithImpl<$Res>
   @override
   $Res call({
     Object? q = null,
-    Object? list = null,
+    Object? answers = null,
     Object? imagePath = freezed,
+    Object? explanation = freezed,
     Object? uuid = null,
   }) {
     return _then(_$_QuestionModel(
@@ -111,13 +128,17 @@ class __$$_QuestionModelCopyWithImpl<$Res>
           ? _value.q
           : q // ignore: cast_nullable_to_non_nullable
               as String,
-      list: null == list
-          ? _value._list
-          : list // ignore: cast_nullable_to_non_nullable
+      answers: null == answers
+          ? _value._answers
+          : answers // ignore: cast_nullable_to_non_nullable
               as List<AnswerModel>,
       imagePath: freezed == imagePath
           ? _value.imagePath
           : imagePath // ignore: cast_nullable_to_non_nullable
+              as String?,
+      explanation: freezed == explanation
+          ? _value.explanation
+          : explanation // ignore: cast_nullable_to_non_nullable
               as String?,
       uuid: null == uuid
           ? _value.uuid
@@ -132,10 +153,11 @@ class __$$_QuestionModelCopyWithImpl<$Res>
 class _$_QuestionModel extends _QuestionModel {
   const _$_QuestionModel(
       {required this.q,
-      required final List<AnswerModel> list,
+      required final List<AnswerModel> answers,
       this.imagePath,
+      this.explanation,
       required this.uuid})
-      : _list = list,
+      : _answers = answers,
         super._();
 
   factory _$_QuestionModel.fromJson(Map<String, dynamic> json) =>
@@ -143,22 +165,24 @@ class _$_QuestionModel extends _QuestionModel {
 
   @override
   final String q;
-  final List<AnswerModel> _list;
+  final List<AnswerModel> _answers;
   @override
-  List<AnswerModel> get list {
-    if (_list is EqualUnmodifiableListView) return _list;
+  List<AnswerModel> get answers {
+    if (_answers is EqualUnmodifiableListView) return _answers;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_list);
+    return EqualUnmodifiableListView(_answers);
   }
 
   @override
   final String? imagePath;
   @override
+  final String? explanation;
+  @override
   final String uuid;
 
   @override
   String toString() {
-    return 'QuestionModel(q: $q, list: $list, imagePath: $imagePath, uuid: $uuid)';
+    return 'QuestionModel(q: $q, answers: $answers, imagePath: $imagePath, explanation: $explanation, uuid: $uuid)';
   }
 
   @override
@@ -167,16 +191,23 @@ class _$_QuestionModel extends _QuestionModel {
         (other.runtimeType == runtimeType &&
             other is _$_QuestionModel &&
             (identical(other.q, q) || other.q == q) &&
-            const DeepCollectionEquality().equals(other._list, _list) &&
+            const DeepCollectionEquality().equals(other._answers, _answers) &&
             (identical(other.imagePath, imagePath) ||
                 other.imagePath == imagePath) &&
+            (identical(other.explanation, explanation) ||
+                other.explanation == explanation) &&
             (identical(other.uuid, uuid) || other.uuid == uuid));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, q,
-      const DeepCollectionEquality().hash(_list), imagePath, uuid);
+  int get hashCode => Object.hash(
+      runtimeType,
+      q,
+      const DeepCollectionEquality().hash(_answers),
+      imagePath,
+      explanation,
+      uuid);
 
   @JsonKey(ignore: true)
   @override
@@ -195,8 +226,9 @@ class _$_QuestionModel extends _QuestionModel {
 abstract class _QuestionModel extends QuestionModel {
   const factory _QuestionModel(
       {required final String q,
-      required final List<AnswerModel> list,
+      required final List<AnswerModel> answers,
       final String? imagePath,
+      final String? explanation,
       required final String uuid}) = _$_QuestionModel;
   const _QuestionModel._() : super._();
 
@@ -206,9 +238,11 @@ abstract class _QuestionModel extends QuestionModel {
   @override
   String get q;
   @override
-  List<AnswerModel> get list;
+  List<AnswerModel> get answers;
   @override
   String? get imagePath;
+  @override
+  String? get explanation;
   @override
   String get uuid;
   @override

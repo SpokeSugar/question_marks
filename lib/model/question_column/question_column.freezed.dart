@@ -20,8 +20,10 @@ QuestionColumn _$QuestionColumnFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$QuestionColumn {
-  String get title => throw _privateConstructorUsedError;
   String get id => throw _privateConstructorUsedError;
+  String get title => throw _privateConstructorUsedError;
+  DateTime? get recentUsedBy => throw _privateConstructorUsedError;
+  DateTime? get createBy => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -35,7 +37,8 @@ abstract class $QuestionColumnCopyWith<$Res> {
           QuestionColumn value, $Res Function(QuestionColumn) then) =
       _$QuestionColumnCopyWithImpl<$Res, QuestionColumn>;
   @useResult
-  $Res call({String title, String id});
+  $Res call(
+      {String id, String title, DateTime? recentUsedBy, DateTime? createBy});
 }
 
 /// @nodoc
@@ -51,18 +54,28 @@ class _$QuestionColumnCopyWithImpl<$Res, $Val extends QuestionColumn>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? title = null,
     Object? id = null,
+    Object? title = null,
+    Object? recentUsedBy = freezed,
+    Object? createBy = freezed,
   }) {
     return _then(_value.copyWith(
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
-              as String,
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      title: null == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      recentUsedBy: freezed == recentUsedBy
+          ? _value.recentUsedBy
+          : recentUsedBy // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      createBy: freezed == createBy
+          ? _value.createBy
+          : createBy // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ) as $Val);
   }
 }
@@ -75,7 +88,8 @@ abstract class _$$_QuestionColumnCopyWith<$Res>
       __$$_QuestionColumnCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String title, String id});
+  $Res call(
+      {String id, String title, DateTime? recentUsedBy, DateTime? createBy});
 }
 
 /// @nodoc
@@ -89,18 +103,28 @@ class __$$_QuestionColumnCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? title = null,
     Object? id = null,
+    Object? title = null,
+    Object? recentUsedBy = freezed,
+    Object? createBy = freezed,
   }) {
     return _then(_$_QuestionColumn(
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
-              as String,
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      title: null == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      recentUsedBy: freezed == recentUsedBy
+          ? _value.recentUsedBy
+          : recentUsedBy // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      createBy: freezed == createBy
+          ? _value.createBy
+          : createBy // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ));
   }
 }
@@ -108,19 +132,27 @@ class __$$_QuestionColumnCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_QuestionColumn implements _QuestionColumn {
-  const _$_QuestionColumn({required this.title, required this.id});
+  const _$_QuestionColumn(
+      {required this.id,
+      required this.title,
+      this.recentUsedBy,
+      this.createBy});
 
   factory _$_QuestionColumn.fromJson(Map<String, dynamic> json) =>
       _$$_QuestionColumnFromJson(json);
 
   @override
+  final String id;
+  @override
   final String title;
   @override
-  final String id;
+  final DateTime? recentUsedBy;
+  @override
+  final DateTime? createBy;
 
   @override
   String toString() {
-    return 'QuestionColumn(title: $title, id: $id)';
+    return 'QuestionColumn(id: $id, title: $title, recentUsedBy: $recentUsedBy, createBy: $createBy)';
   }
 
   @override
@@ -128,13 +160,18 @@ class _$_QuestionColumn implements _QuestionColumn {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_QuestionColumn &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.title, title) || other.title == title) &&
-            (identical(other.id, id) || other.id == id));
+            (identical(other.recentUsedBy, recentUsedBy) ||
+                other.recentUsedBy == recentUsedBy) &&
+            (identical(other.createBy, createBy) ||
+                other.createBy == createBy));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, title, id);
+  int get hashCode =>
+      Object.hash(runtimeType, id, title, recentUsedBy, createBy);
 
   @JsonKey(ignore: true)
   @override
@@ -152,16 +189,22 @@ class _$_QuestionColumn implements _QuestionColumn {
 
 abstract class _QuestionColumn implements QuestionColumn {
   const factory _QuestionColumn(
-      {required final String title,
-      required final String id}) = _$_QuestionColumn;
+      {required final String id,
+      required final String title,
+      final DateTime? recentUsedBy,
+      final DateTime? createBy}) = _$_QuestionColumn;
 
   factory _QuestionColumn.fromJson(Map<String, dynamic> json) =
       _$_QuestionColumn.fromJson;
 
   @override
+  String get id;
+  @override
   String get title;
   @override
-  String get id;
+  DateTime? get recentUsedBy;
+  @override
+  DateTime? get createBy;
   @override
   @JsonKey(ignore: true)
   _$$_QuestionColumnCopyWith<_$_QuestionColumn> get copyWith =>

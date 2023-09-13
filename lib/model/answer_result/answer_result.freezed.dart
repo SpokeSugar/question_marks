@@ -22,11 +22,9 @@ AnswerResultModel _$AnswerResultModelFromJson(Map<String, dynamic> json) {
 mixin _$AnswerResultModel {
   String get sessionID => throw _privateConstructorUsedError;
   String get questionID => throw _privateConstructorUsedError;
-  String get resultID => throw _privateConstructorUsedError;
-  int? get questionHash => throw _privateConstructorUsedError;
-  List<AnswerID> get answers => throw _privateConstructorUsedError;
-  Set<AnswerID> get collectAnswer => throw _privateConstructorUsedError;
-  Set<AnswerID> get selectAnswer => throw _privateConstructorUsedError;
+  List<String> get answers => throw _privateConstructorUsedError;
+  Set<String> get collectAnswer => throw _privateConstructorUsedError;
+  Set<String> get selectAnswer => throw _privateConstructorUsedError;
   @DateTimeConverter()
   DateTime? get dateTime => throw _privateConstructorUsedError;
 
@@ -45,11 +43,9 @@ abstract class $AnswerResultModelCopyWith<$Res> {
   $Res call(
       {String sessionID,
       String questionID,
-      String resultID,
-      int? questionHash,
-      List<AnswerID> answers,
-      Set<AnswerID> collectAnswer,
-      Set<AnswerID> selectAnswer,
+      List<String> answers,
+      Set<String> collectAnswer,
+      Set<String> selectAnswer,
       @DateTimeConverter() DateTime? dateTime});
 }
 
@@ -68,8 +64,6 @@ class _$AnswerResultModelCopyWithImpl<$Res, $Val extends AnswerResultModel>
   $Res call({
     Object? sessionID = null,
     Object? questionID = null,
-    Object? resultID = null,
-    Object? questionHash = freezed,
     Object? answers = null,
     Object? collectAnswer = null,
     Object? selectAnswer = null,
@@ -84,26 +78,18 @@ class _$AnswerResultModelCopyWithImpl<$Res, $Val extends AnswerResultModel>
           ? _value.questionID
           : questionID // ignore: cast_nullable_to_non_nullable
               as String,
-      resultID: null == resultID
-          ? _value.resultID
-          : resultID // ignore: cast_nullable_to_non_nullable
-              as String,
-      questionHash: freezed == questionHash
-          ? _value.questionHash
-          : questionHash // ignore: cast_nullable_to_non_nullable
-              as int?,
       answers: null == answers
           ? _value.answers
           : answers // ignore: cast_nullable_to_non_nullable
-              as List<AnswerID>,
+              as List<String>,
       collectAnswer: null == collectAnswer
           ? _value.collectAnswer
           : collectAnswer // ignore: cast_nullable_to_non_nullable
-              as Set<AnswerID>,
+              as Set<String>,
       selectAnswer: null == selectAnswer
           ? _value.selectAnswer
           : selectAnswer // ignore: cast_nullable_to_non_nullable
-              as Set<AnswerID>,
+              as Set<String>,
       dateTime: freezed == dateTime
           ? _value.dateTime
           : dateTime // ignore: cast_nullable_to_non_nullable
@@ -123,11 +109,9 @@ abstract class _$$_AnswerResultModelCopyWith<$Res>
   $Res call(
       {String sessionID,
       String questionID,
-      String resultID,
-      int? questionHash,
-      List<AnswerID> answers,
-      Set<AnswerID> collectAnswer,
-      Set<AnswerID> selectAnswer,
+      List<String> answers,
+      Set<String> collectAnswer,
+      Set<String> selectAnswer,
       @DateTimeConverter() DateTime? dateTime});
 }
 
@@ -144,8 +128,6 @@ class __$$_AnswerResultModelCopyWithImpl<$Res>
   $Res call({
     Object? sessionID = null,
     Object? questionID = null,
-    Object? resultID = null,
-    Object? questionHash = freezed,
     Object? answers = null,
     Object? collectAnswer = null,
     Object? selectAnswer = null,
@@ -160,26 +142,18 @@ class __$$_AnswerResultModelCopyWithImpl<$Res>
           ? _value.questionID
           : questionID // ignore: cast_nullable_to_non_nullable
               as String,
-      resultID: null == resultID
-          ? _value.resultID
-          : resultID // ignore: cast_nullable_to_non_nullable
-              as String,
-      questionHash: freezed == questionHash
-          ? _value.questionHash
-          : questionHash // ignore: cast_nullable_to_non_nullable
-              as int?,
       answers: null == answers
           ? _value._answers
           : answers // ignore: cast_nullable_to_non_nullable
-              as List<AnswerID>,
+              as List<String>,
       collectAnswer: null == collectAnswer
           ? _value._collectAnswer
           : collectAnswer // ignore: cast_nullable_to_non_nullable
-              as Set<AnswerID>,
+              as Set<String>,
       selectAnswer: null == selectAnswer
           ? _value._selectAnswer
           : selectAnswer // ignore: cast_nullable_to_non_nullable
-              as Set<AnswerID>,
+              as Set<String>,
       dateTime: freezed == dateTime
           ? _value.dateTime
           : dateTime // ignore: cast_nullable_to_non_nullable
@@ -196,11 +170,9 @@ class _$_AnswerResultModel extends _AnswerResultModel
   const _$_AnswerResultModel(
       {required this.sessionID,
       required this.questionID,
-      required this.resultID,
-      this.questionHash,
-      final List<AnswerID> answers = const [],
-      final Set<AnswerID> collectAnswer = const {},
-      final Set<AnswerID> selectAnswer = const {},
+      final List<String> answers = const [],
+      final Set<String> collectAnswer = const {},
+      final Set<String> selectAnswer = const {},
       @DateTimeConverter() this.dateTime})
       : _answers = answers,
         _collectAnswer = collectAnswer,
@@ -214,32 +186,28 @@ class _$_AnswerResultModel extends _AnswerResultModel
   final String sessionID;
   @override
   final String questionID;
-  @override
-  final String resultID;
-  @override
-  final int? questionHash;
-  final List<AnswerID> _answers;
+  final List<String> _answers;
   @override
   @JsonKey()
-  List<AnswerID> get answers {
+  List<String> get answers {
     if (_answers is EqualUnmodifiableListView) return _answers;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_answers);
   }
 
-  final Set<AnswerID> _collectAnswer;
+  final Set<String> _collectAnswer;
   @override
   @JsonKey()
-  Set<AnswerID> get collectAnswer {
+  Set<String> get collectAnswer {
     if (_collectAnswer is EqualUnmodifiableSetView) return _collectAnswer;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableSetView(_collectAnswer);
   }
 
-  final Set<AnswerID> _selectAnswer;
+  final Set<String> _selectAnswer;
   @override
   @JsonKey()
-  Set<AnswerID> get selectAnswer {
+  Set<String> get selectAnswer {
     if (_selectAnswer is EqualUnmodifiableSetView) return _selectAnswer;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableSetView(_selectAnswer);
@@ -251,7 +219,7 @@ class _$_AnswerResultModel extends _AnswerResultModel
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'AnswerResultModel(sessionID: $sessionID, questionID: $questionID, resultID: $resultID, questionHash: $questionHash, answers: $answers, collectAnswer: $collectAnswer, selectAnswer: $selectAnswer, dateTime: $dateTime)';
+    return 'AnswerResultModel(sessionID: $sessionID, questionID: $questionID, answers: $answers, collectAnswer: $collectAnswer, selectAnswer: $selectAnswer, dateTime: $dateTime)';
   }
 
   @override
@@ -261,8 +229,6 @@ class _$_AnswerResultModel extends _AnswerResultModel
       ..add(DiagnosticsProperty('type', 'AnswerResultModel'))
       ..add(DiagnosticsProperty('sessionID', sessionID))
       ..add(DiagnosticsProperty('questionID', questionID))
-      ..add(DiagnosticsProperty('resultID', resultID))
-      ..add(DiagnosticsProperty('questionHash', questionHash))
       ..add(DiagnosticsProperty('answers', answers))
       ..add(DiagnosticsProperty('collectAnswer', collectAnswer))
       ..add(DiagnosticsProperty('selectAnswer', selectAnswer))
@@ -278,10 +244,6 @@ class _$_AnswerResultModel extends _AnswerResultModel
                 other.sessionID == sessionID) &&
             (identical(other.questionID, questionID) ||
                 other.questionID == questionID) &&
-            (identical(other.resultID, resultID) ||
-                other.resultID == resultID) &&
-            (identical(other.questionHash, questionHash) ||
-                other.questionHash == questionHash) &&
             const DeepCollectionEquality().equals(other._answers, _answers) &&
             const DeepCollectionEquality()
                 .equals(other._collectAnswer, _collectAnswer) &&
@@ -297,8 +259,6 @@ class _$_AnswerResultModel extends _AnswerResultModel
       runtimeType,
       sessionID,
       questionID,
-      resultID,
-      questionHash,
       const DeepCollectionEquality().hash(_answers),
       const DeepCollectionEquality().hash(_collectAnswer),
       const DeepCollectionEquality().hash(_selectAnswer),
@@ -323,11 +283,9 @@ abstract class _AnswerResultModel extends AnswerResultModel {
   const factory _AnswerResultModel(
       {required final String sessionID,
       required final String questionID,
-      required final String resultID,
-      final int? questionHash,
-      final List<AnswerID> answers,
-      final Set<AnswerID> collectAnswer,
-      final Set<AnswerID> selectAnswer,
+      final List<String> answers,
+      final Set<String> collectAnswer,
+      final Set<String> selectAnswer,
       @DateTimeConverter() final DateTime? dateTime}) = _$_AnswerResultModel;
   const _AnswerResultModel._() : super._();
 
@@ -339,179 +297,16 @@ abstract class _AnswerResultModel extends AnswerResultModel {
   @override
   String get questionID;
   @override
-  String get resultID;
+  List<String> get answers;
   @override
-  int? get questionHash;
+  Set<String> get collectAnswer;
   @override
-  List<AnswerID> get answers;
-  @override
-  Set<AnswerID> get collectAnswer;
-  @override
-  Set<AnswerID> get selectAnswer;
+  Set<String> get selectAnswer;
   @override
   @DateTimeConverter()
   DateTime? get dateTime;
   @override
   @JsonKey(ignore: true)
   _$$_AnswerResultModelCopyWith<_$_AnswerResultModel> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-AnswerID _$AnswerIDFromJson(Map<String, dynamic> json) {
-  return _AnswerID.fromJson(json);
-}
-
-/// @nodoc
-mixin _$AnswerID {
-  String get uuid => throw _privateConstructorUsedError;
-  int? get hash => throw _privateConstructorUsedError;
-
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $AnswerIDCopyWith<AnswerID> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $AnswerIDCopyWith<$Res> {
-  factory $AnswerIDCopyWith(AnswerID value, $Res Function(AnswerID) then) =
-      _$AnswerIDCopyWithImpl<$Res, AnswerID>;
-  @useResult
-  $Res call({String uuid, int? hash});
-}
-
-/// @nodoc
-class _$AnswerIDCopyWithImpl<$Res, $Val extends AnswerID>
-    implements $AnswerIDCopyWith<$Res> {
-  _$AnswerIDCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? uuid = null,
-    Object? hash = freezed,
-  }) {
-    return _then(_value.copyWith(
-      uuid: null == uuid
-          ? _value.uuid
-          : uuid // ignore: cast_nullable_to_non_nullable
-              as String,
-      hash: freezed == hash
-          ? _value.hash
-          : hash // ignore: cast_nullable_to_non_nullable
-              as int?,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$_AnswerIDCopyWith<$Res> implements $AnswerIDCopyWith<$Res> {
-  factory _$$_AnswerIDCopyWith(
-          _$_AnswerID value, $Res Function(_$_AnswerID) then) =
-      __$$_AnswerIDCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String uuid, int? hash});
-}
-
-/// @nodoc
-class __$$_AnswerIDCopyWithImpl<$Res>
-    extends _$AnswerIDCopyWithImpl<$Res, _$_AnswerID>
-    implements _$$_AnswerIDCopyWith<$Res> {
-  __$$_AnswerIDCopyWithImpl(
-      _$_AnswerID _value, $Res Function(_$_AnswerID) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? uuid = null,
-    Object? hash = freezed,
-  }) {
-    return _then(_$_AnswerID(
-      uuid: null == uuid
-          ? _value.uuid
-          : uuid // ignore: cast_nullable_to_non_nullable
-              as String,
-      hash: freezed == hash
-          ? _value.hash
-          : hash // ignore: cast_nullable_to_non_nullable
-              as int?,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$_AnswerID with DiagnosticableTreeMixin implements _AnswerID {
-  const _$_AnswerID({required this.uuid, this.hash});
-
-  factory _$_AnswerID.fromJson(Map<String, dynamic> json) =>
-      _$$_AnswerIDFromJson(json);
-
-  @override
-  final String uuid;
-  @override
-  final int? hash;
-
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'AnswerID(uuid: $uuid, hash: $hash)';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'AnswerID'))
-      ..add(DiagnosticsProperty('uuid', uuid))
-      ..add(DiagnosticsProperty('hash', hash));
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$_AnswerID &&
-            (identical(other.uuid, uuid) || other.uuid == uuid) &&
-            (identical(other.hash, hash) || other.hash == hash));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, uuid, hash);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$_AnswerIDCopyWith<_$_AnswerID> get copyWith =>
-      __$$_AnswerIDCopyWithImpl<_$_AnswerID>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$_AnswerIDToJson(
-      this,
-    );
-  }
-}
-
-abstract class _AnswerID implements AnswerID {
-  const factory _AnswerID({required final String uuid, final int? hash}) =
-      _$_AnswerID;
-
-  factory _AnswerID.fromJson(Map<String, dynamic> json) = _$_AnswerID.fromJson;
-
-  @override
-  String get uuid;
-  @override
-  int? get hash;
-  @override
-  @JsonKey(ignore: true)
-  _$$_AnswerIDCopyWith<_$_AnswerID> get copyWith =>
       throw _privateConstructorUsedError;
 }

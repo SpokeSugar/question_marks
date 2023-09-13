@@ -2,7 +2,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:uuid/uuid.dart';
 
 import '../answer/answer.dart';
-import '../answer_result/answer_result.dart';
 
 part 'question.freezed.dart';
 part 'question.g.dart';
@@ -18,42 +17,39 @@ class QuestionModel with _$QuestionModel {
 
   const factory QuestionModel(
       {required String q,
-      required List<AnswerModel> list,
+      required List<AnswerModel> answers,
       String? imagePath,
+      String? explanation,
       required String uuid}) = _QuestionModel;
 
   List<AnswerModel> toShuffleList() {
-    final newList = list.toList();
+    final newList = answers.toList();
     newList.shuffle();
     return newList;
   }
 
   Set<AnswerModel> toCollectSet() {
-    return list.where((e) => e.isCorrect).toSet();
+    return answers.where((e) => e.isCorrect).toSet();
   }
 
-  List<AnswerID> toIDList() {
-    return list.map((e) => AnswerID(uuid: e.uuid, hash: e.hashCode)).toList();
+  List<String> toIDList() {
+    return answers.map((e) => e.uuid).toList();
   }
 
-  Set<AnswerID> toIDSet() {
-    return list.map((e) => AnswerID(uuid: e.uuid, hash: e.hashCode)).toSet();
+  Set<String> toIDSet() {
+    return answers.map((e) => e.uuid).toSet();
   }
 
-  Set<AnswerID> toCollectIDSet() {
-    return toCollectSet()
-        .map((e) => AnswerID(uuid: e.uuid, hash: e.hashCode))
-        .toSet();
+  Set<String> toCollectIDSet() {
+    return toCollectSet().map((e) => e.uuid).toSet();
   }
 
-  Iterable<AnswerModel> getFromAnswerIDIterable(Iterable<AnswerID> ids) {
-    return list.where((e) =>
-        ids.contains(AnswerID(uuid: e.uuid)) ||
-        ids.contains(AnswerID(uuid: e.uuid, hash: e.hashCode)));
+  Iterable<AnswerModel> getFromAnswerIDIterable(Iterable<String> ids) {
+    return answers.where((e) => ids.contains(e.uuid) || ids.contains(e.uuid));
   }
 
   String? getUniqueAnswerID() {
-    final idList = list.map((e) => e.uuid);
+    final idList = answers.map((e) => e.uuid);
 
     while (true) {
       final newID = const Uuid().v4();

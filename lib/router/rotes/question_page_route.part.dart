@@ -26,34 +26,9 @@ class QuestionPageRoute extends GoRouteData {
                       ),
                 ),
                 selectedIndex: (set) {
-                  final getQuestion = ref.read(
-                    questionManagerProvider.call(questionListId).select(
-                          (value) => value.value![index],
-                        ),
-                  );
-
                   ref
-                      .read(questionSessionsProvider.call(sessionID).notifier)
-                      .addQuestionSet(getQuestion);
-                  final getResultID = ref
-                      .read(questionSessionsProvider.call(sessionID).notifier)
-                      .getNewAnswerResultID();
-                  ref
-                      .read(questionSessionsProvider.call(sessionID).notifier)
-                      .addAnswerList(AnswerResultModel(
-                        sessionID: sessionID,
-                        questionID: getQuestion.uuid,
-                        questionHash: getQuestion.hashCode,
-                        resultID: getResultID,
-                        answers: getQuestion.toIDList(),
-                        collectAnswer: getQuestion.toCollectIDSet(),
-                        selectAnswer: set
-                            .map(
-                                (e) => AnswerID(uuid: e.uuid, hash: e.hashCode))
-                            .toSet(),
-                        dateTime: DateTime.now(),
-                      ));
-
+                      .watch(questionSessionsProvider.call(sessionID).notifier)
+                      .addSessions(questionListId, index, set, sessionID);
                   AnswerPageRoute(
                           questionListId: questionListId,
                           sessionId: sessionID,
@@ -66,10 +41,12 @@ class QuestionPageRoute extends GoRouteData {
                 },
                 collectValue:
                     (ref.watch(settingsNotifierProvider).showCollectNum
-                        ? ref.watch(questionManagerProvider
-                            .call(questionListId)
-                            .select((value) =>
-                                value.value?[index].toCollectSet().length))
+                        ? ref.watch(
+                            questionManagerProvider.call(questionListId).select(
+                                  (value) =>
+                                      value.value?[index].toCollectSet().length,
+                                ),
+                          )
                         : null),
               ),
       );

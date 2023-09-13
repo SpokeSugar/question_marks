@@ -1,116 +1,78 @@
-import 'dart:collection';
-import 'dart:convert';
-import 'dart:io';
+import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
-import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 import 'package:question_marks/model/question_column/question_column.dart';
 import 'package:question_marks/state/question_manager/question_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../database/abstract/question_list_io.dart';
+import '../../logger.dart';
 import '../../model/question/question.dart';
 
 part 'question_id_list.g.dart';
 
 @riverpod
 class QuestionIDListState extends _$QuestionIDListState {
+  StreamSubscription? requestListSubscription;
+
   @override
   FutureOr<List<QuestionColumn>> build() async {
-    ref.keepAlive();
-    getFromDirectory();
+    if (!kIsWeb) {
+      requestList();
+      return <QuestionColumn>[];
+    }
+
     return <QuestionColumn>[];
   }
 
-  List<String> get getIDList => state.value!.map((e) => e.id).toList();
+  void requestList() {
+    void addRequest() {
+      state = const AsyncLoading();
 
-  Future<void> getFromDirectory({Directory? directory}) async {
-    if (directory == null && !kIsWeb) {
-      final getDirectory = await getApplicationDocumentsDirectory();
-      directory = Directory(
-          p.join(getDirectory.absolute.path, QuestionModel.questionPath));
+      requestListSubscription =
+          ref.watch(questionListIOProvider).fetchListStream().listen(
+        (event) {
+          state = AsyncData([event, ...?state.value].sortedBy(
+              (e) => e.recentUsedBy ?? DateTime.fromMillisecondsSinceEpoch(0)));
+        },
+        onError: (obj) {
+          logger.e("$runtimeType.requestList() ERROR: $obj", stackTrace: obj);
+          requestListSubscription = null;
+        },
+        onDone: () {
+          logger.i(
+              "$runtimeType.requestList(): QuestionIDList Complete loading All");
+          requestListSubscription = null;
+        },
+      );
     }
-    if (directory != null) {
-      state = await AsyncValue.guard(
-          () async => UnmodifiableListView([...(await getList(directory!))]));
+
+    if (requestListSubscription == null) {
+      addRequest();
+      return;
     }
+    requestListSubscription!.cancel().then((value) => addRequest);
   }
 
-  static Future<List<QuestionColumn>> getList(Directory directory) async {
-    List<QuestionColumn> questionIDList = [];
-
-    final sortedList = directory.listSync().toList();
-
-    sortedList
-        .sort((a, b) => b.statSync().changed.compareTo(a.statSync().changed));
-
-    for (final i in sortedList) {
-      if (i is Directory) {
-        final id = File(p.join(i.absolute.path, 'id.json'));
-        if (await id.exists()) {
-          try {
-            questionIDList = [
-              QuestionColumn.fromJson(
-                  jsonDecode(await id.readAsString(encoding: utf8))),
-              ...questionIDList
-            ];
-          } catch (e) {
-            debugPrint("$e");
-          }
-        }
-      }
-    }
-    return questionIDList;
-  }
-
-  Future<void> setIDColumn(String title, String id) async {
-    state = AsyncData(UnmodifiableListView(
-        [QuestionColumn(title: title, id: id), ...?state.value]));
-  }
-
-  String setIDData(String title, List<QuestionModel> model) {
+  String setQuestions(String title, List<QuestionModel> model) {
     final id = getUniqueID();
-    ref.watch(questionManagerProvider.call(id).notifier).setValue(model);
+    ref.watch(questionManagerProvider.call(id).notifier).overrideValue(model);
     state = AsyncData(UnmodifiableListView(
         [QuestionColumn(title: title, id: id), ...?state.value]));
     return id;
   }
 
-  static Future<void> removeIDFromFile(Directory quizDirectory) async {
-    if (quizDirectory.existsSync()) {
-      quizDirectory.delete(recursive: true);
-    }
-  }
-
   Future<void> removeID(int value) async {
-    state = await AsyncValue.guard(() async {
-      final newList = state.value?.toList();
-
-      final docDoc = await getApplicationDocumentsDirectory();
-      if ((state.value?.length ?? 0) > value) {
-        await compute(
-          removeIDFromFile,
-          Directory(
-            p.joinAll(
-              [
-                docDoc.absolute.path,
-                QuestionModel.questionPath,
-                if (state.value?[value].id != null) state.value![value].id
-              ],
-            ),
-          ),
-        );
-      }
-      newList?.removeAt(value);
-      return UnmodifiableListView([...?newList]);
-    });
+    state = await AsyncValue.guard(
+        () async => await ref.watch(questionListIOProvider).removeID(value));
   }
 
   String getUniqueID() {
     while (true) {
       final id = const Uuid().v4();
-      if (!getIDList.contains(id)) {
+      if (!(state.value?.map((e) => e.id).contains(id) ?? false)) {
         return id;
       }
     }

@@ -9,7 +9,7 @@ class AnswerModel with _$AnswerModel {
       _$AnswerModelFromJson(json);
   const factory AnswerModel({
     required String uuid,
-    required String answer,
+    required String label,
     String? exp,
     required bool isCorrect,
   }) = _answerModel;

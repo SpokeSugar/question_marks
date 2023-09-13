@@ -7,6 +7,10 @@ part 'question_column.g.dart';
 class QuestionColumn with _$QuestionColumn {
   factory QuestionColumn.fromJson(Map<String, dynamic> json) =>
       _$QuestionColumnFromJson(json);
-  const factory QuestionColumn({required String title, required String id}) =
-      _QuestionColumn;
+
+  const factory QuestionColumn(
+      {required String id,
+      required String title,
+      DateTime? recentUsedBy,
+      DateTime? createBy}) = _QuestionColumn;
 }

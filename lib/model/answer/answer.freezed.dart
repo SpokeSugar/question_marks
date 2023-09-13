@@ -21,7 +21,7 @@ AnswerModel _$AnswerModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$AnswerModel {
   String get uuid => throw _privateConstructorUsedError;
-  String get answer => throw _privateConstructorUsedError;
+  String get label => throw _privateConstructorUsedError;
   String? get exp => throw _privateConstructorUsedError;
   bool get isCorrect => throw _privateConstructorUsedError;
 
@@ -37,7 +37,7 @@ abstract class $AnswerModelCopyWith<$Res> {
           AnswerModel value, $Res Function(AnswerModel) then) =
       _$AnswerModelCopyWithImpl<$Res, AnswerModel>;
   @useResult
-  $Res call({String uuid, String answer, String? exp, bool isCorrect});
+  $Res call({String uuid, String label, String? exp, bool isCorrect});
 }
 
 /// @nodoc
@@ -54,7 +54,7 @@ class _$AnswerModelCopyWithImpl<$Res, $Val extends AnswerModel>
   @override
   $Res call({
     Object? uuid = null,
-    Object? answer = null,
+    Object? label = null,
     Object? exp = freezed,
     Object? isCorrect = null,
   }) {
@@ -63,9 +63,9 @@ class _$AnswerModelCopyWithImpl<$Res, $Val extends AnswerModel>
           ? _value.uuid
           : uuid // ignore: cast_nullable_to_non_nullable
               as String,
-      answer: null == answer
-          ? _value.answer
-          : answer // ignore: cast_nullable_to_non_nullable
+      label: null == label
+          ? _value.label
+          : label // ignore: cast_nullable_to_non_nullable
               as String,
       exp: freezed == exp
           ? _value.exp
@@ -87,7 +87,7 @@ abstract class _$$_answerModelCopyWith<$Res>
       __$$_answerModelCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String uuid, String answer, String? exp, bool isCorrect});
+  $Res call({String uuid, String label, String? exp, bool isCorrect});
 }
 
 /// @nodoc
@@ -102,7 +102,7 @@ class __$$_answerModelCopyWithImpl<$Res>
   @override
   $Res call({
     Object? uuid = null,
-    Object? answer = null,
+    Object? label = null,
     Object? exp = freezed,
     Object? isCorrect = null,
   }) {
@@ -111,9 +111,9 @@ class __$$_answerModelCopyWithImpl<$Res>
           ? _value.uuid
           : uuid // ignore: cast_nullable_to_non_nullable
               as String,
-      answer: null == answer
-          ? _value.answer
-          : answer // ignore: cast_nullable_to_non_nullable
+      label: null == label
+          ? _value.label
+          : label // ignore: cast_nullable_to_non_nullable
               as String,
       exp: freezed == exp
           ? _value.exp
@@ -132,7 +132,7 @@ class __$$_answerModelCopyWithImpl<$Res>
 class _$_answerModel implements _answerModel {
   const _$_answerModel(
       {required this.uuid,
-      required this.answer,
+      required this.label,
       this.exp,
       required this.isCorrect});
 
@@ -142,7 +142,7 @@ class _$_answerModel implements _answerModel {
   @override
   final String uuid;
   @override
-  final String answer;
+  final String label;
   @override
   final String? exp;
   @override
@@ -150,7 +150,7 @@ class _$_answerModel implements _answerModel {
 
   @override
   String toString() {
-    return 'AnswerModel(uuid: $uuid, answer: $answer, exp: $exp, isCorrect: $isCorrect)';
+    return 'AnswerModel(uuid: $uuid, label: $label, exp: $exp, isCorrect: $isCorrect)';
   }
 
   @override
@@ -159,7 +159,7 @@ class _$_answerModel implements _answerModel {
         (other.runtimeType == runtimeType &&
             other is _$_answerModel &&
             (identical(other.uuid, uuid) || other.uuid == uuid) &&
-            (identical(other.answer, answer) || other.answer == answer) &&
+            (identical(other.label, label) || other.label == label) &&
             (identical(other.exp, exp) || other.exp == exp) &&
             (identical(other.isCorrect, isCorrect) ||
                 other.isCorrect == isCorrect));
@@ -167,7 +167,7 @@ class _$_answerModel implements _answerModel {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, uuid, answer, exp, isCorrect);
+  int get hashCode => Object.hash(runtimeType, uuid, label, exp, isCorrect);
 
   @JsonKey(ignore: true)
   @override
@@ -186,7 +186,7 @@ class _$_answerModel implements _answerModel {
 abstract class _answerModel implements AnswerModel {
   const factory _answerModel(
       {required final String uuid,
-      required final String answer,
+      required final String label,
       final String? exp,
       required final bool isCorrect}) = _$_answerModel;
 
@@ -196,7 +196,7 @@ abstract class _answerModel implements AnswerModel {
   @override
   String get uuid;
   @override
-  String get answer;
+  String get label;
   @override
   String? get exp;
   @override

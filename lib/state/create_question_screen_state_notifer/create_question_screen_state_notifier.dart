@@ -29,9 +29,9 @@ class CreateQuestionScreenStateNotifier
         questionIDs: UnmodifiableListView([
       QuestionModel(
           q: "",
-          list: [
-            AnswerModel(uuid: const Uuid().v4(), answer: '', isCorrect: false),
-            AnswerModel(uuid: const Uuid().v4(), answer: '', isCorrect: false)
+          answers: [
+            AnswerModel(uuid: const Uuid().v4(), label: '', isCorrect: false),
+            AnswerModel(uuid: const Uuid().v4(), label: '', isCorrect: false)
           ],
           uuid: const Uuid().v4())
     ]));
@@ -41,7 +41,7 @@ class CreateQuestionScreenStateNotifier
     final iList = <QuestionModel>[];
     for (final i in state.questionIDs) {
       final jList = <AnswerModel>[];
-      for (final j in i.list) {
+      for (final j in i.answers) {
         final id = CreateAnswerListID(i.uuid, j.uuid);
         final answer = ref
             .read(
@@ -52,11 +52,11 @@ class CreateQuestionScreenStateNotifier
         final exp =
             ref.read(answerDescriptionTextFieldProvider.call(id)).value.text;
         final correct = ref.read(answerCollectValueProvider.call(id));
-        jList.add(j.copyWith(answer: answer, exp: exp, isCorrect: correct));
+        jList.add(j.copyWith(label: answer, exp: exp, isCorrect: correct));
       }
       final q = ref.read(
           questionTextFieldProvider.call(i.uuid).select((value) => value.text));
-      iList.add(i.copyWith(q: q, list: UnmodifiableListView(jList)));
+      iList.add(i.copyWith(q: q, answers: UnmodifiableListView(jList)));
     }
     state = state.copyWith(questionIDs: UnmodifiableListView(iList));
     logger.d(state.toString());
@@ -64,7 +64,7 @@ class CreateQuestionScreenStateNotifier
 
   List<QuestionModel> modelsCopy() {
     return UnmodifiableListView(state.questionIDs
-        .map((e) => e.copyWith(list: UnmodifiableListView(e.list.map(
+        .map((e) => e.copyWith(answers: UnmodifiableListView(e.answers.map(
               (i) {
                 final answer = ref
                     .read(
@@ -79,7 +79,7 @@ class CreateQuestionScreenStateNotifier
                 final isCollect = ref.read(answerCollectValueProvider
                     .call(CreateAnswerListID(e.uuid, i.uuid)));
                 return i.copyWith(
-                    answer: answer, exp: exp, isCorrect: isCollect);
+                    label: answer, exp: exp, isCorrect: isCollect);
               },
             )))));
   }
@@ -90,7 +90,7 @@ class CreateQuestionScreenStateNotifier
         questionIDs: UnmodifiableListView(state.questionIDs.map((e) {
       if (e.uuid == questionID) {
         return e.copyWith(
-            list: UnmodifiableListView(e.list.map((i) {
+            answers: UnmodifiableListView(e.answers.map((i) {
           if (i.uuid != answerID) {
             return i;
           }
@@ -119,9 +119,9 @@ class CreateQuestionScreenStateNotifier
       ...state.questionIDs,
       QuestionModel(
         q: '',
-        list: [
-          AnswerModel(uuid: i, answer: '', isCorrect: false),
-          AnswerModel(uuid: j, answer: '', isCorrect: false)
+        answers: [
+          AnswerModel(uuid: i, label: '', isCorrect: false),
+          AnswerModel(uuid: j, label: '', isCorrect: false)
         ],
         uuid: state.getUniqueQuestionID(),
       )
@@ -133,11 +133,11 @@ class CreateQuestionScreenStateNotifier
     final newQuestionIDs = state.questionIDs.map(
       (e) {
         if (e.uuid == questionID) {
-          final newID = e.list.getUniqueID();
+          final newID = e.answers.getUniqueID();
           return e.copyWith(
-              list: UnmodifiableListView([
-            ...e.list,
-            AnswerModel(uuid: newID, answer: '', isCorrect: false)
+              answers: UnmodifiableListView([
+            ...e.answers,
+            AnswerModel(uuid: newID, label: '', isCorrect: false)
           ]));
         } else {
           return e;
@@ -155,7 +155,7 @@ class CreateQuestionScreenStateNotifier
       final stockList = state.questionIDs.toList();
       final item = stockList.removeAt(index);
       state = state.copyWith(questionIDs: UnmodifiableListView(stockList));
-      for (var e in item.list) {
+      for (var e in item.answers) {
         _removeAnswerIDForProviders(item.uuid, e.uuid);
       }
       ref.invalidate(questionTextFieldProvider.call(item.uuid));
@@ -169,11 +169,11 @@ class CreateQuestionScreenStateNotifier
       final iList = [];
       for (final i in state.questionIDs) {
         final jList = <AnswerModel>[];
-        for (final j in i.list) {
+        for (final j in i.answers) {
           final id = CreateAnswerListID(i.uuid, j.uuid);
           jList.add(
             j.copyWith(
-              answer: ref.read(
+              label: ref.read(
                 answerTextFieldProvider.call(id).select((value) => value.text),
               ),
               exp: ref.read(
@@ -186,7 +186,7 @@ class CreateQuestionScreenStateNotifier
           );
         }
         iList.add(i.copyWith(
-            list: UnmodifiableListView(jList),
+            answers: UnmodifiableListView(jList),
             q: ref.read(questionTextFieldProvider
                 .call(i.uuid)
                 .select((value) => value.text))));
@@ -219,7 +219,7 @@ class CreateQuestionScreenStateNotifier
       await questionIDTask;
 
       isSuccess?.call();
-      ref.watch(questionIDListStateProvider.notifier).getFromDirectory();
+      ref.watch(questionIDListStateProvider.notifier).build();
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -233,13 +233,13 @@ final createQuestionCanSaveProvider = Provider.autoDispose((ref) {
         return false;
       }
       final collects = <bool>[];
-      for (final j in i.list) {
+      for (final j in i.answers) {
         collects.add(j.isCorrect);
-        if (j.answer == '') {
+        if (j.label == '') {
           return false;
         }
       }
-      if (!collects.contains(true)) {
+      if (collects.contains(false)) {
         return false;
       }
     }

@@ -48,7 +48,7 @@ class _AnswerButtonBarState extends State<AnswerButtonBar> {
           children: [
             for (int i = 0; i < widget.answers.length; i++)
               ChoiceChip(
-                label: Text(widget.answers[i].answer),
+                label: Text(widget.answers[i].label),
                 selected: i == answerState.grab(context),
                 onSelected: (selected) {
                   answerState.value = selected ? i : null;

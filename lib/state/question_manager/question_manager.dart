@@ -1,16 +1,10 @@
 import 'dart:collection';
-import 'dart:convert';
-import 'dart:io';
 import 'dart:math' as math;
 
-import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
-import 'package:question_marks/model/answer_result/answer_result.dart';
 import 'package:question_marks/model/question/question.dart';
-import 'package:question_marks/state/file_loading_state/file_loading_state_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:uuid/uuid.dart';
 
+import '../../database/abstract/question_io.dart';
 import '../../model/answer/answer.dart';
 
 part 'question_manager.g.dart';
@@ -20,29 +14,29 @@ class QuestionManager extends _$QuestionManager {
   static List<QuestionModel> damyData = UnmodifiableListView([
     const QuestionModel(
       q: 'test00',
-      list: [
+      answers: [
         AnswerModel(
-            answer: "A",
+            label: "A",
             exp: "AはChigau",
             isCorrect: false,
             uuid: "a630e4b9-9779-440b-b97e-faa560395f95"),
         AnswerModel(
-            answer: "B",
+            label: "B",
             exp: "Bダウ",
             isCorrect: true,
             uuid: "6c583c0a-c2be-4347-89c6-bd78693366c9"),
         AnswerModel(
-            answer: "C",
+            label: "C",
             exp: "CはChigau",
             isCorrect: false,
             uuid: "5867653c-cb94-4f5e-b98c-4a7f12eb820e"),
         AnswerModel(
-            answer: "D",
+            label: "D",
             exp: "DはChigau",
             isCorrect: false,
             uuid: "73f8122c-3bd7-489a-ba2a-683b30ad64f0"),
         AnswerModel(
-            answer: "E",
+            label: "E",
             exp: "EはChigau",
             isCorrect: false,
             uuid: "940dd916-d5b1-40a3-b812-c7e653fdb69d"),
@@ -51,29 +45,29 @@ class QuestionManager extends _$QuestionManager {
     ),
     const QuestionModel(
       q: 'test01',
-      list: [
+      answers: [
         AnswerModel(
-            answer: "A",
+            label: "A",
             exp: "AはChigau",
             isCorrect: false,
             uuid: "01a6c1fb-0b61-4822-b7a3-a254f0801778"),
         AnswerModel(
-            answer: "B",
+            label: "B",
             exp: "Bダウ",
             isCorrect: true,
             uuid: "74849f06-2dbf-491e-83d5-efbf51359ca5"),
         AnswerModel(
-            answer: "C",
+            label: "C",
             exp: "CはChigau",
             isCorrect: false,
             uuid: "8e938399-ef4d-485c-bbd3-52653d69b52c"),
         AnswerModel(
-            answer: "D",
+            label: "D",
             exp: "DはDao",
             isCorrect: true,
             uuid: "0278268f-876a-4893-b0b8-4091997ae112"),
         AnswerModel(
-            answer: "E",
+            label: "E",
             exp: "EはChigau",
             isCorrect: false,
             uuid: "fe186fc4-b897-4dd4-a3b6-3e4aaaa85ced"),
@@ -92,65 +86,11 @@ class QuestionManager extends _$QuestionManager {
 
   @override
   Future<List<QuestionModel>> build(String id) async {
-    final appDoc = await getApplicationDocumentsDirectory();
-    final file = File(p.join(appDoc.absolute.path, QuestionModel.questionPath,
-        id, FileLoadingSession.quizJsonFilePath));
-    if (file.existsSync()) {
-      final fileString = await file.readAsString();
-      final List<dynamic> jsonData = jsonDecode(fileString);
-      List<QuestionModel> questionList = jsonData.map((e) {
-        final item = QuestionModel.fromJson(e);
-        if (item.imagePath != null && item.imagePath != "") {
-          final imageFolder = File(p.join(
-              appDoc.absolute.path,
-              QuestionModel.questionPath,
-              id,
-              FileLoadingSession.imageFolderPath,
-              item.imagePath?.toLowerCase()));
-          if (imageFolder.existsSync()) {
-            return item.copyWith(imagePath: imageFolder.absolute.path);
-          }
-        }
-        return item.copyWith(imagePath: null);
-      }).toList();
-      return questionList;
-    }
-    return UnmodifiableListView(damyData);
+    return ref.watch(questionIOProvider).getQuestions(id);
   }
 
-  void setValue(List<QuestionModel> model) {
+  void overrideValue(List<QuestionModel> model) {
+    ref.keepAlive();
     state = AsyncData(UnmodifiableListView(model));
-  }
-}
-
-extension GetModelExtention on List<QuestionModel> {
-  Map<String, QuestionModel> get toQuestionMap =>
-      Map.fromEntries(map((e) => MapEntry(e.uuid, e)));
-
-  String uniqueID() {
-    final idList = map((e) => e.uuid);
-    while (true) {
-      final uuid = const Uuid().v4();
-      if (!idList.contains(uuid)) {
-        return uuid;
-      }
-    }
-  }
-}
-
-extension AnswerModelListExtension on List<AnswerModel> {
-  Map<String, AnswerModel> get fromAnswerIDToAnswerModel =>
-      Map.fromEntries(map((e) => MapEntry(e.uuid, e)));
-}
-
-extension AnswerMapExtension on Map<AnswerID, AnswerModel> {
-  Set<AnswerModel> toAnswerSet(Set<AnswerID> id) {
-    final map = <AnswerModel>{};
-    forEach((key, value) {
-      if (id.contains(key)) {
-        map.add(value);
-      }
-    });
-    return map;
   }
 }

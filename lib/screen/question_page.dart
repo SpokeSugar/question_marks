@@ -41,7 +41,10 @@ class QuestionPage extends StatelessWidget {
                   height: 8,
                 ),
                 if (question.imagePath != null)
-                  Image.file(File(question.imagePath!)),
+                  Image.file(
+                    File(question.imagePath!),
+                    alignment: Alignment.topCenter,
+                  ),
                 if (question.imagePath != null)
                   const SizedBox(
                     height: 8,

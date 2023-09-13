@@ -36,7 +36,7 @@ class AnswerPage extends ConsumerWidget {
   String get collectSetString {
     String result = '';
     for (var element in collectSet) {
-      result = '$result${result == '' ? '' : ', '}${element.answer}';
+      result = '$result${result == '' ? '' : ', '}${element.label}';
     }
     return result;
   }
@@ -44,7 +44,7 @@ class AnswerPage extends ConsumerWidget {
   String get selectSetString {
     String result = '';
     for (var element in select) {
-      result = '$result${result == '' ? '' : ', '}${element.answer}';
+      result = '$result${result == '' ? '' : ', '}${element.label}';
     }
     return result;
   }
@@ -89,7 +89,7 @@ class AnswerPage extends ConsumerWidget {
                   ...select.map(
                     (e) {
                       return ExpandedCard(
-                        title: e.answer,
+                        title: e.label,
                         description: e.exp,
                         isCollect: e.isCorrect,
                       );

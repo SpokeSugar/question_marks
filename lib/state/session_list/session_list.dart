@@ -23,8 +23,7 @@ class SessionList extends _$SessionList {
   }
 
   void remove(String value) {
-    final newState = state.toSet();
-    newState.removeWhere((element) => element == value);
+    final newState = state.toSet()..removeWhere((element) => element == value);
     state = UnmodifiableSetView(newState);
   }
 }

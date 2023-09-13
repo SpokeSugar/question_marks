@@ -21,9 +21,7 @@ class QuestionSessionState with _$QuestionSessionState {
   }) = _QuestionSessionState;
 
   QuestionModel? getAnswerID(AnswerResultModel answerID) {
-    final answerQuestion = question.where((e) =>
-        e.uuid == answerID.questionID &&
-        e.hashCode == (answerID.questionHash ?? e.hashCode));
+    final answerQuestion = question.where((e) => e.uuid == answerID.questionID);
     if (answerQuestion.isEmpty) {
       return null;
     } else {

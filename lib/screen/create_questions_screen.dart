@@ -142,15 +142,15 @@ class EditableQuestionsCard extends ConsumerWidget {
               maxLines: 3,
               decoration: InputDecoration(labelText: "Question $index"),
             ),
-            for (int i = 0; i < model.list.length; i++)
+            for (int i = 0; i < model.answers.length; i++)
               AnswerTextField(
                 indexText: (i + 1).toString(),
-                answerID: model.list[i].uuid,
+                answerID: model.answers[i].uuid,
                 questionID: model.uuid,
               ),
             AddAnswerButton(
               questionID: model.uuid,
-              finalAnswerID: model.list.last.uuid,
+              finalAnswerID: model.answers.last.uuid,
             )
           ],
         ),

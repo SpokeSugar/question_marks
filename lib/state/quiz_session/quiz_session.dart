@@ -4,10 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:question_marks/model/answer_result/answer_result.dart';
 import 'package:question_marks/state/session_list/session_list.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:uuid/uuid.dart';
 
-import '../../model/question/question.dart';
+import '../../model/answer/answer.dart';
 import '../../model/question_session_state/question_session_state.dart';
+import '../question_manager/question_manager.dart';
 
 part 'quiz_session.g.dart';
 
@@ -34,24 +34,27 @@ class QuestionSessions extends _$QuestionSessions {
     state = state.copyWith(index: state.index + 1);
   }
 
-  String getNewAnswerResultID() {
-    final map = state.answers.map((e) => e.resultID).toList();
-    while (true) {
-      String i = const Uuid().v4();
-      if (!map.contains(i)) {
-        return i;
-      }
-    }
-  }
+  void addSessions(String questionListId, int index, Set<AnswerModel> set,
+      String sessionID) {
+    final getQuestion = ref.watch(
+      questionManagerProvider.call(questionListId).select(
+            (value) => value.value![index],
+          ),
+    );
 
-  int addAnswerList(AnswerResultModel model) {
+    state = state.copyWith(
+        question: UnmodifiableSetView({...state.question, getQuestion}));
+
+    final model = AnswerResultModel(
+      sessionID: sessionID,
+      questionID: getQuestion.uuid,
+      answers: getQuestion.toIDList(),
+      collectAnswer: getQuestion.toCollectIDSet(),
+      selectAnswer: set.map((e) => e.uuid).toSet(),
+      dateTime: DateTime.now(),
+    );
+
     state = state.copyWith(
         answers: UnmodifiableListView([...state.answers, model]));
-    return state.answers.length - 1;
-  }
-
-  void addQuestionSet(QuestionModel model) {
-    state = state.copyWith(
-        question: UnmodifiableSetView({...state.question, model}));
   }
 }

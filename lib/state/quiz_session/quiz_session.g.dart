@@ -6,7 +6,7 @@ part of 'quiz_session.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$questionSessionsHash() => r'fae018e342462866de7b93126389f7324c058678';
+String _$questionSessionsHash() => r'7708edd82b98af22267cce54b24cfaecd3db108b';
 
 /// Copied from Dart SDK
 class _SystemHash {

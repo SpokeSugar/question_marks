@@ -17,7 +17,7 @@ class CreateQuestionScreenState with _$CreateQuestionScreenState {
   String getUniqueQuestionID() => questionIDs.map((e) => e.uuid).getUniqueID();
 
   String getUniqueAnswerIDFromIndex(int index) =>
-      questionIDs[index].list.map((e) => e.uuid).getUniqueID();
+      questionIDs[index].answers.map((e) => e.uuid).getUniqueID();
 }
 
 extension AnswerListExtenstion on List<AnswerModel> {

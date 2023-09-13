@@ -54,7 +54,7 @@ class FileLoadingSession extends _$FileLoadingSession {
       final json = await convertJson(file);
       return ref
           .watch(questionIDListStateProvider.notifier)
-          .setIDData('Test Products', json);
+          .setQuestions('Test Products', json);
     }
     return null;
   }
@@ -184,7 +184,7 @@ class FileLoadingSession extends _$FileLoadingSession {
         answerId.add(id);
         answers.add(AnswerModel(
           uuid: id,
-          answer: i[j].toString(),
+          label: i[j].toString(),
           exp: i[j + 1].toString(),
           isCorrect: answerSplit.contains(answerId.length),
         ));
@@ -193,7 +193,7 @@ class FileLoadingSession extends _$FileLoadingSession {
       questionId.add(id);
       questions.add(QuestionModel(
         q: question,
-        list: answers,
+        answers: answers,
         imagePath: filePath,
         uuid: id,
       ));
@@ -234,44 +234,44 @@ class FileLoadingSession extends _$FileLoadingSession {
     Directory? documentsDirectory;
     Directory? tempDirectory;
     if (state.questions != null) {
-      try {
-        documentsDirectory = await getApplicationDocumentsDirectory();
-        tempDirectory = await getTemporaryDirectory();
+      // try {
+      documentsDirectory = await getApplicationDocumentsDirectory();
+      tempDirectory = await getTemporaryDirectory();
 
-        id = ref.read(questionIDListStateProvider.notifier).getUniqueID();
+      id = ref.read(questionIDListStateProvider.notifier).getUniqueID();
 
-        final movePhotoTask = compute(
-            _movePhotoFile,
-            MovePhotoReq(
-                id, documentsDirectory, tempDirectory, state.questions!));
-        await movePhotoTask;
-        final questionTask = compute(
-            replaceFile,
-            FileReq(
-                p.join(documentsDirectory.absolute.path,
-                    QuestionModel.questionPath, id, quizJsonFilePath),
-                jsonEncode(state.questions)));
+      final movePhotoTask = compute(
+          _movePhotoFile,
+          MovePhotoReq(
+              id, documentsDirectory, tempDirectory, state.questions!));
+      await movePhotoTask;
+      final questionTask = compute(
+          replaceFile,
+          FileReq(
+              p.join(documentsDirectory.absolute.path,
+                  QuestionModel.questionPath, id, quizJsonFilePath),
+              jsonEncode(state.questions)));
 
-        final questionIDTask = compute(
-            replaceFile,
-            FileReq(
-                p.join(documentsDirectory.absolute.path,
-                    QuestionModel.questionPath, id, idFilePath),
-                jsonEncode(QuestionColumn(title: title, id: id))));
+      final questionIDTask = compute(
+          replaceFile,
+          FileReq(
+              p.join(documentsDirectory.absolute.path,
+                  QuestionModel.questionPath, id, idFilePath),
+              jsonEncode(QuestionColumn(title: title, id: id))));
 
-        await questionTask;
-        await questionIDTask;
+      await questionTask;
+      await questionIDTask;
 
-        ref.watch(questionIDListStateProvider.notifier).getFromDirectory();
+      ref.watch(questionIDListStateProvider.notifier).build();
 
-        ref.watch(homeBottomBarIndexProvider.notifier).state = 0;
-      } catch (e) {
-        if (id != null && documentsDirectory != null) {
-          safeDeleteDirectory(p.join(documentsDirectory.absolute.path,
-              QuestionModel.questionPath, id));
-        }
-        logger.w(e, stackTrace: StackTrace.current);
-      }
+      ref.watch(homeBottomBarIndexProvider.notifier).state = 0;
+      // } catch (e) {
+      //   if (id != null && documentsDirectory != null) {
+      //     safeDeleteDirectory(p.join(documentsDirectory.absolute.path,
+      //         QuestionModel.questionPath, id));
+      //   }
+      //   logger.w(e, stackTrace: StackTrace.current);
+      // }
     }
   }
 

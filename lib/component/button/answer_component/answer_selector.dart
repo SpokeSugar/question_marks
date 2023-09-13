@@ -77,7 +77,7 @@ class _AnswerSelectorState extends State<AnswerSelector> {
           children: [
             for (int i = 0; i < widget.answers.length; i++)
               FilterChip(
-                label: Text(widget.answers[i].answer),
+                label: Text(widget.answers[i].label),
                 selected: answerState.grab(context).contains(widget.answers[i]),
                 onSelected: changed(i),
               ),

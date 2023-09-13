@@ -15,21 +15,11 @@ class AnswerResultModel with _$AnswerResultModel {
   const factory AnswerResultModel({
     required String sessionID,
     required String questionID,
-    required String resultID,
-    int? questionHash,
-    @Default([]) List<AnswerID> answers,
-    @Default({}) Set<AnswerID> collectAnswer,
-    @Default({}) Set<AnswerID> selectAnswer,
+    @Default([]) List<String> answers,
+    @Default({}) Set<String> collectAnswer,
+    @Default({}) Set<String> selectAnswer,
     @DateTimeConverter() DateTime? dateTime,
   }) = _AnswerResultModel;
 
   bool get isCollectAll => setEquals(selectAnswer, collectAnswer);
-}
-
-@freezed
-class AnswerID with _$AnswerID {
-  factory AnswerID.fromJson(Map<String, dynamic> json) =>
-      _$AnswerIDFromJson(json);
-
-  const factory AnswerID({required String uuid, int? hash}) = _AnswerID;
 }

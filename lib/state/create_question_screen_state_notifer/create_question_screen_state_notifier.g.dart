@@ -7,7 +7,7 @@ part of 'create_question_screen_state_notifier.dart';
 // **************************************************************************
 
 String _$createQuestionScreenStateNotifierHash() =>
-    r'b2d4213b545321cfca6054ba31eeac09a61c4579';
+    r'765eeda556dbe004d93416d4aefffd7c30b323ca';
 
 /// See also [CreateQuestionScreenStateNotifier].
 @ProviderFor(CreateQuestionScreenStateNotifier)
