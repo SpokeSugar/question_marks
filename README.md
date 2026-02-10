@@ -1,4 +1,5 @@
-# Question Marks [日本語](/README_JP.md)
+[日本語](/README_JP.md)
+# Question Marks
 
 A Flutter-based quiz application designed for exam preparation and study.
 
