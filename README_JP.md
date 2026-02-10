@@ -1,4 +1,5 @@
-# Question Marks [English](/README.md)
+[English](/README.md)
+# Question Marks
 
 試験勉強などのために設計された Flutter 製のクイズアプリケーションです。
 
